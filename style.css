@@ -1,0 +1,400 @@
+/*** Base ***/
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    min-height: 100dvh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFAFF;
+
+}
+
+/*** ======= ***/
+
+
+/*** HEADER ***/
+.header {
+    padding: 0px 10px;
+    align-items: center;
+    /* background: rgb(255, 203, 60); */
+    background: rgb(255 157 142);
+    
+    box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+    color: black;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-weight: bold;
+    overflow-x: hidden;
+    max-height: 45px;
+    height: 45px;
+    /* border-bottom: #342E37 1px solid;  */
+}
+
+.emptyFrame {
+    background-color: #ffd2cda6;
+}
+
+
+@media screen and (max-width: 600px) {
+    .header {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .title {
+        display: none;
+    }
+
+}
+
+select {
+    height: 30px;
+    background: none;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    text-decoration: none;
+}
+
+*:focus {
+    outline-color: rgba(0, 0, 0, 0.605);
+}
+
+.preview-button, .chat-tools button, .chat-tools select {
+    background: #00000024;
+    border-radius: 5px;
+}
+
+.preview-button,
+.header button, .chat-tools button, .chat-tools select  {
+    cursor: pointer;
+    margin: 0px 5px 0px 5px;
+    height: 100%;
+    background: none;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.preview-button,
+.header button:hover, .chat-tools button , .chat-tools select{
+    background: #0000001e;
+    border-radius: 5px;
+}
+
+/*** ======= ***/
+
+.container {
+    display: flex;
+    flex: 1;
+}
+
+.container__right {
+    flex: 1;
+    min-width: 20%;
+    display: flex;
+    flex-direction: column;
+}
+
+.container__left {
+    width: 35%;
+    min-width: 20%;
+    display: flex;
+    flex-direction: column;
+}
+
+.resizer {
+    cursor: col-resize;
+    width: 2px;
+    background-color:#342E37;
+}
+/* 
+.resizer:hover {
+    box-shadow: -2px 0px 0px 1px #342E37;
+} */
+
+
+/*** Chat Section ***/
+.chat-history {
+    text-align: justify;
+    overflow-y: auto;
+    height: 72vh;
+    resize: vertical;
+}
+
+.chat-history div {
+    padding: 10px;
+    margin: 0;
+    min-height: 3rem;
+    font-size: 1.1em;
+    text-align: justify;
+    white-space: pre-wrap;
+}
+
+.user {
+    background-color: rgb(255 215 214 / 29%);
+}
+
+.assistant::before {
+    content: "Buddy: ";
+}
+
+.user::before {
+    content: "You: ";
+}
+
+.chat-input {
+    padding: 5px;
+    height: 15vh;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    /* border-top: 2px solid rgba(0, 0, 0, 0.307); */
+    background-color: #FFFAFF;
+}
+.chat-tools {
+    display: flex;
+    padding: 5px;
+    margin: 5px 5px 0px 5px ;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.307);
+    background-color: #FFFAFF;
+    border-radius: 5px;
+    overflow: auto;
+    box-shadow: 0 0 15px rgba(0,0,0,.1);
+
+
+}
+
+#prompt-input {
+    flex-grow: 1;
+    margin-right: 5px;
+    padding: 10px;
+    resize: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    border: 1px solid rgba(0, 0, 0, 0.307);
+    background-color: #FFFAFF;
+    box-shadow: 0 0 15px rgba(0,0,0,.1);
+
+}
+
+#prompt-input:scope {
+    border-color: initial;
+    border: 1px solid rgba(0, 0, 0, 0.307);
+}
+
+#submit-button {
+    font-weight: bold;
+    font-size: 20px;
+    padding: 4px;
+    margin: 0;
+    background-color: #FFFAFF;
+    border-width: 1px;
+    border-style: solid;
+    color: rgb(118, 118, 118);
+    width: 30px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.307);
+    box-shadow: 0 0 15px rgba(0,0,0,.1);
+
+}
+
+#submit-button:hover {
+    background: #f8f8f8;
+    color: rgb(96, 96, 96);
+}
+
+#loader {
+    display: none;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 4px;
+    margin: 0;
+    background-color: #FFFAFF;
+    border-width: 1px;
+    border-style: solid;
+    color: rgb(118, 118, 118);
+    width: 30px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 2px solid rgba(0, 0, 0, 0.307);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+
+    0% {
+        background-color: #FFFAFF;
+
+    }
+
+    50% {
+        background-color: #76767689;
+
+    }
+
+    100% {
+        background-color: #FFFAFF;
+
+    }
+}
+
+/*** Preview Section ***/
+
+.preview-body {
+    overflow-y: auto;
+    flex: 1;
+    resize: vertical;
+    display: flex;
+    flex-direction: column;
+}
+
+#previewCode {
+    display: none;
+    flex: 1;
+    margin: 5px;
+    max-height: 90vh !important;
+    display: block;
+    padding: 10px;
+    font-family: Monaco, monospace;
+    background-color: #002b36;
+    color: #d7e3e5;
+    border-radius: 5px;
+    white-space: pre;
+    overflow: auto;
+}
+
+iframe {
+    flex: 1;
+    border: none;
+    overflow: auto;
+    resize: vertical;
+}
+
+code {
+    display: block;
+    padding: 10px;
+    font-family: Monaco, monospace;
+    background-color: #002b36;
+    color: #d7e3e5;
+    border-radius: 5px;
+    white-space: pre;
+    overflow: auto;
+}
+
+.apikey {
+
+    height: 20px;
+
+}
+
+
+/********/
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 301;
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; 
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 95%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+  }
+  
+  /* Add Animation */
+  @-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+  }
+  
+  @keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+  }
+  
+  /* The Close Button */
+  .close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .modal-header {
+    padding: 2px 16px;
+    background-color: rgb(255 157 142);
+    color: black;
+  }
+  
+  .modal-body {
+    padding: 6px 16px;
+    margin: auto;
+  }
+  
+  .modal-footer {
+    padding: 2px 16px;
+    background-color: rgb(255 157 142);
+    color: black;
+  }
+  
+  #systemPrompt {
+    width: 97%;
+    height: 300px;
+    padding: 10px;
+    font-family: Monaco, monospace;
+    background-color: #002b36;
+    color: #d7e3e5;
+    border-radius: 5px;
+    overflow: auto;
+    resize: vertical;
+}
+
+#contactBtn > a {
+        color: inherit;            
+        text-decoration: none;   
+        background-color: none;
+}
+
+#contactBtn > a:hover, #contactBtn > a:active {
+    color: inherit;
+    text-decoration: none;
+    background-color: none;
+}
