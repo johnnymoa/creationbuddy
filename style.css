@@ -62,6 +62,16 @@ select {
     text-decoration: none;
 }
 
+#personalitySelect {
+    height: 30px;
+    background: none;
+    font-weight: bold;
+    font-size: 1rem;
+    border: 2px black solid;
+border-radius: 5px;
+    text-decoration: unset;
+}
+
 *:focus {
     outline-color: rgba(0, 0, 0, 0.605);
 }
