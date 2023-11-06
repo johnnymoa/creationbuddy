@@ -160,25 +160,42 @@ document.getElementById('apikeyBtn').onclick = function () {
     localStorage.setItem('apikey', apikey.value);
 };
 
+
+
+//custom prompt management
 let modal = document.getElementById("myModal");
 modal = document.querySelector('#myModal');
 let span = document.getElementsByClassName("close")[0];
+
 span.onclick = function () {
     modal.style.display = "none";
 };
+
 span.addEventListener("touchend", function (e) {
     modal.style.display = "none";
 }, { passive: false });
+
 window.onclick = function (event) {
     if (event.target == modal) {
     modal.style.display = "none";
     }
 };
+
 window.addEventListener("touchend", function (e) {
     modal.style.display = "none";
 }, { passive: false });
 
-//setup help button
 document.getElementById("systemBtn").onclick = () => {
     modal.style.display = "block";
 };
+
+document.getElementById('personalitySelect').onchange = function (e) {
+    let selectedPersonality =  e.target.value;
+    document.getElementById("systemPrompt").textContent = document.getElementById(selectedPersonality).textContent;
+ };
+
+ document.getElementById("systemPrompt").textContent = document.getElementById("creationbuddy").textContent;
+
+ 
+
+

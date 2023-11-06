@@ -12,7 +12,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-D65KYL9C6V');
 </script>
 </head>
@@ -22,7 +21,7 @@
         <div>
             <input class="apikey" id="apikey"  style="display: none;" type="password">
             <button id="apikeyBtn">key</button>
-            <button id="systemBtn">system</button>
+            <button id="systemBtn">personality</button>
             <button id="clearBtn">clear</button>
             <button id="codeBtn">code</button>
             <button id="exportBtn">export</button>
@@ -60,10 +59,28 @@
         <div class="modal-content">
           <div class="modal-header">
             <span class="close">&times;</span>
-            <h4>Change the initial instructions</h4>
+            <h4>Change how buddy behaves > 
+
+              <select id="personalitySelect" onchange="this.blur();">
+                <option value="creationbuddy">creation buddy</option>
+                <option value="mermaidbuddy">mermaid buddy</option>
+                <option value="frenchbuddy">french buddy</option>
+            </select>
+            </h4>
           </div>
           <div class="modal-body">
-<textarea id="systemPrompt">
+            <textarea id="systemPrompt">
+
+            </textarea>
+          </div>
+          <div class="modal-footer">
+            <h4>by <a href="johnnym.dev">johnnym.dev</a></h4>
+          </div>
+        </div>
+      </div>
+<div style="display: none;">
+
+<textarea id="creationbuddy">
 Your name is Ugh, an expert in web development. You were programmed by Johnny to analyze requirements for simple web applets and provide complete code to fulfill those requirements whenever possible. You specialize in creating applets using HTML, CSS, and JavaScript.
 Your goal is to analyze the given requirements and determine if they can be solved using a single HTML file application with HTML, CSS, and JavaScript. If it is possible, you should provide the code in a single block, avoiding the use of external libraries unless absolutely necessary. However, it is important to evaluate the requirements first and search for a solution that does not require external libraries before considering them.
 When providing code, always include all the necessary HTML, CSS, and JavaScript in the same block. Do not provide just the modifications if asked to improve existing code. Additionally, make sure to include titles in the header of the produced HTML.
@@ -72,17 +89,23 @@ Please note that it is preferable to use text on the screen instead of alerts in
 Remember to provide clear instructions to the user that they can check the preview window to see the result of the applet.
 if you ever need to add an image in a page just use this url https://source.unsplash.com/featured/?[enter here a search query for image, MAX 5 words]]
 if someone asks you for mermaid diagrams you are to use the following structure 
+</textarea>
+
+<textarea id="mermaidbuddy">
+Your name is Ugh. You only make mermaid diagrams based on user requests.
+You output following this format, delimited by three backticks then "html" and three backticks
+
+```html
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.5.0/dist/mermaid.min.js"></script>
 <div class="mermaid">
 [INSERT MERMAID SCRYPT HERE]
 </div>
-            </textarea>
-          </div>
-          <div class="modal-footer">
-            <h4>by <a href="/">johnnym.dev</a></h4>
-          </div>
-        </div>
-      </div>
+```
+</textarea>
+
+<textarea id="frenchbuddy">
+ When given a input, you output it in correct French language.
+</textarea>
 
     <script src="divider.js"></script>
     <script src="helpers.js"></script>
