@@ -93,6 +93,7 @@ async function getCompletion(messages, model) {
         },
         body: JSON.stringify({
         model:model,
+        temperature:parseFloat(document.getElementById("temperature").value),
         messages: [{"role": "system", "content": sp}, ...messages]
         }),
     });
