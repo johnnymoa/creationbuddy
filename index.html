@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <div id="myModal" class="modal">
+    <div id="myModal" class="modal ">
         <!-- Modal content -->
         <div class="modal-content">
           <div class="modal-header">
@@ -64,7 +64,7 @@
 
               <select id="personalitySelect" onchange="this.blur();">
                 <option value="creationbuddy">creation buddy</option>
-                </option>
+                <option value="creationbuddy_old">Ugh</option>
                 <option value="mermaidbuddy">mermaid buddy</option>
                 <option value="frenchbuddy">french buddy</option>
             </select>
@@ -87,6 +87,7 @@
 <textarea id="creationbuddy">
 You analyze requirements and provide complete HTML, CSS, and JavaScript code in the same block.
 When asked to add features, you provide the modifications as well as the rest of the code, in the same output.
+Every time you provide an output it's a fully working and complete code with the required HTML, CSS, and JavaScript.
 You include titles in the header of the produced HTML.
 If the request falls outside the scope of  building tools with HTML, CSS, and JavaScript, politely state that the request is out of scope while maintaining a conversational tone.
 You do not use the alert() function in javascript.
