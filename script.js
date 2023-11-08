@@ -190,9 +190,18 @@ document.getElementById("systemBtn").onclick = () => {
 };
 
 document.getElementById('personalitySelect').onchange = function (e) {
-    let selectedPersonality =  e.target.value;
-    document.getElementById("systemPrompt").textContent = document.getElementById(selectedPersonality).textContent;
- };
+    document.getElementById('personalitySelect2').value =  e.target.value;
+    document.getElementById("systemPrompt").value = '';
+    document.getElementById("systemPrompt").value = document.getElementById(e.target.value).textContent;
+};
+
+ document.getElementById('personalitySelect2').onchange = function (e) {
+    document.getElementById('personalitySelect').value =  e.target.value;
+    document.getElementById("systemPrompt").value = '';
+    document.getElementById("systemPrompt").value = document.getElementById(e.target.value).textContent;
+    if(e.target.value == "freestyle")modal.style.display = "block";
+};
+
 
  document.getElementById("systemPrompt").textContent = document.getElementById("creationbuddy").textContent;
 

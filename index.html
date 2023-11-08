@@ -21,17 +21,20 @@
         <div>
             <input class="apikey" id="apikey"  style="display: none;" type="password">
             <button id="apikeyBtn">key</button>
-            <button id="systemBtn">personality</button>
             <button id="clearBtn">clear</button>
             <button id="codeBtn">code</button>
             <button id="exportBtn">export</button>
             <button id="contactBtn"><a href="mailto:johnny.moacdieh@gmail.com?subject=Hello%20from%20creation%20buddy.">contact</a></button>
-            <select id="modelSelect" onchange="this.blur();">
-                <option value="gpt-3.5-turbo-1106">faster</option>
-                <option value="gpt-4">smarter</option>
-                <option value="gpt-4-1106-preview">other</option>
-            </select>
-        </div>
+            <button id="systemBtn">options</button>
+            <select id="personalitySelect2" onchange="this.blur();">
+              <option value="creationbuddy">create web apps</option>
+              <option value="slidesbuddy">make slides</option>
+              <!-- <option value="creationbuddy_old">Ugh</option> -->
+              <option value="mermaidbuddy">make diagrams</option>
+              <option value="frenchbuddy">translate to french</option>
+              <option value="freestyle">i want to decide</option>
+          </select>
+          </div>
     </div>
     <div class="container">
         <div class="container__left" id="chat">
@@ -61,7 +64,6 @@
           <div class="modal-header">
             <span class="close">&times;</span>
             <h4>Change what buddy does:  
-
               <select id="personalitySelect" onchange="this.blur();">
                 <option value="creationbuddy">create web apps</option>
                 <option value="slidesbuddy">make slides</option>
@@ -69,14 +71,19 @@
                 <option value="mermaidbuddy">make diagrams</option>
                 <option value="frenchbuddy">translate to french</option>
                 <option value="freestyle">i want to decide</option>
-
             </select>
             , and choose how creative it is 
             <input type="range" id="temperature" step="0.01" min="0" max="1" value="0.7">
+            , and what kind of brain it has 
+            <select id="modelSelect" onchange="this.blur();">
+              <option value="gpt-3.5-turbo-1106">faster</option>
+              <option value="gpt-4">smarter</option>
+              <option value="gpt-4-1106-preview">experimental</option>
+          </select>
             </h4>
           </div>
           <div class="modal-body">
-            <textarea id="systemPrompt">
+            <textarea placeholder="tell buddy what you expect of it, what kind of inputs they should expect, what kind of outputs they should provide..." id="systemPrompt">
 
             </textarea>
           </div>

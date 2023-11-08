@@ -58,15 +58,6 @@ select {
     background: none;
     font-weight: bold;
     font-size: 1rem;
-    border: none;
-    text-decoration: none;
-}
-
-#personalitySelect {
-    height: 30px;
-    background: none;
-    font-weight: bold;
-    font-size: 1rem;
     border: 2px black solid;
 border-radius: 5px;
     text-decoration: unset;
