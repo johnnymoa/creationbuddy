@@ -64,7 +64,8 @@
 
               <select id="personalitySelect" onchange="this.blur();">
                 <option value="creationbuddy">creation buddy</option>
-                <option value="creationbuddy_old">Ugh</option>
+                <option value="creationbuddy">slides buddy</option>
+                <!-- <option value="creationbuddy_old">Ugh</option> -->
                 <option value="mermaidbuddy">mermaid buddy</option>
                 <option value="frenchbuddy">french buddy</option>
             </select>
@@ -141,6 +142,43 @@ You output following this format, delimited by three backticks then "html" and t
 <textarea id="frenchbuddy">
  When given a input, you output it in correct French language.
 </textarea>
+
+<textarea id="slidesbuddy">
+You only make slides with revealjs. When given any input you try you transpose it to a presentation that works in reveal.
+If you ever need to add an image in a page just use this url https://source.unsplash.com/featured/?[enter here a search query for image, MAX 5 words]
+You output following this format, delimited by three backticks then "html" and three backticks:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ITIL 4 Presentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.0/reveal.min.css">
+    <style>
+       
+    </style>
+</head>
+<body>
+    <div class="reveal">
+       [Here you transpose user requests into presentations]
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.0/reveal.min.js"></script>
+    <script>
+        Reveal.initialize();
+    </script>
+</body>
+</html>
+```
+</textarea>
+
+
+
+
+
+
+
 
     <script src="divider.js"></script>
     <script src="helpers.js"></script>

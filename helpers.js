@@ -89,7 +89,7 @@ async function getCompletion(messages, model) {
         method: "POST",
         headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
+        Authorization: `Bearer ${API_KEY}`
         },
         body: JSON.stringify({
         model:model,
