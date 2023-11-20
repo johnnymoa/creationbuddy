@@ -2,99 +2,124 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>creation buddy</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>creation buddy</title>
+  <meta charset="UTF-8">
   <meta name="apple-mobile-web-app-capable" content="yes">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-D65KYL9C6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-D65KYL9C6V');
-</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D65KYL9C6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-D65KYL9C6V');
+  </script>
+  <script type="module">
+    // // Import the functions you need from the SDKs you need
+    // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+    // // TODO: Add SDKs for Firebase products that you want to use
+    // // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // // Your web app's Firebase configuration
+    // // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    // const firebaseConfig = {
+    //   apiKey: "AIzaSyDm2vH3dXce99VpC77WHth6xnXhyDDlZ60",
+    //   authDomain: "creation-buddy.firebaseapp.com",
+    //   projectId: "creation-buddy",
+    //   storageBucket: "creation-buddy.appspot.com",
+    //   messagingSenderId: "1092486132420",
+    //   appId: "1:1092486132420:web:03a4c192c50184eca24f91",
+    //   measurementId: "G-C1C9NXTYF4"
+    // };
+
+    // // Initialize Firebase
+    // const app = initializeApp(firebaseConfig);
+
+  </script>
 </head>
+
 <body>
-    <div class="header">
-        <div class="title">creation buddy <small style="font-size: 10px;">by <a style="text-decoration: none; color: black;" href="https://johnnym.dev" target="_blank">johnnym.dev</a></small></div>
-        <div>
-            <input class="apikey" id="apikey"  style="display: none;" type="password">
-            <button id="apikeyBtn">key</button>
-            <button id="clearBtn">clear</button>
-            <button id="codeBtn">code</button>
-            <button id="exportBtn">export</button>
-            <button id="contactBtn"><a href="mailto:johnny.moacdieh@gmail.com?subject=Hello%20from%20creation%20buddy.">contact</a></button>
-            <button id="systemBtn">options</button>
-            <select id="personalitySelect2" onchange="this.blur();">
-                <option value="creationbuddy">web apps</option>
-                <option value="slidesbuddy">slides</option>
-                <option value="mermaidbuddy">diagrams</option>
-                <option value="p5buddy">games/visuals</option>
-                <option value="frenchbuddy">french</option>
-                <option value="freestyle">custom</option>
-          </select>
-          </div>
+  <div class="header">
+    <div class="title">creation buddy <small style="font-size: 10px;">by <a style="text-decoration: none; color: black;"
+          href="https://johnnym.dev" target="_blank">johnnym.dev</a></small></div>
+    <div>
+      <input class="apikey" id="apikey" style="display: none;" type="password">
+      <button id="apikeyBtn">key</button>
+      <button id="clearBtn">clear</button>
+      <button id="codeBtn">code</button>
+      <button id="exportBtn">export</button>
+      <button id="contactBtn"><a
+          href="mailto:johnny.moacdieh@gmail.com?subject=Hello%20from%20creation%20buddy.">contact</a></button>
+      <button id="systemBtn">options</button>
+      <select id="personalitySelect2" onchange="this.blur();">
+        <option value="creationbuddy">web apps</option>
+        <option value="slidesbuddy">slides</option>
+        <option value="mermaidbuddy">diagrams</option>
+        <option value="p5buddy">games/visuals</option>
+        <option value="freestyle">custom</option>
+      </select>
     </div>
-    <div class="container">
-        <div class="container__left" id="chat">
-            <div class="chat-history"></div>
-            <div class="chat-tools"> 
-                <label for="lastCode">last_code</label><input type="checkbox" id="lastCode">
-                <label for="includeCode">include_code</label><input type="checkbox" id="includeCode">
-            </div>
-            <div class="chat-input">
-                <textarea id="prompt-input" placeholder="Type your prompts here"></textarea>
-                <button id="submit-button">►</button>
-                <button id="loader">►</button>
-            </div>
-        </div>
-        <div class="resizer" id="dragMe"></div>
-        <div class="container__right" id="preview">
-            <div class="preview-body" id="resultPreviewPane">
-                <iframe class="emptyFrame" id="previewFrame"></iframe>
-                <textarea id="previewCode" style="display: none;"></textarea>
-            </div>
-        </div>
-    </div>
-
-    <div id="myModal" class="modal ">
-        <!-- Modal content -->
-        <div class="modal-content">
-          <div class="modal-header">
-            <span class="close">&times;</span>
-            <h4>Change what buddy creates:  
-              <select id="personalitySelect" onchange="this.blur();">
-                <option value="creationbuddy">web apps</option>
-                <option value="slidesbuddy">slides</option>
-                <option value="mermaidbuddy">diagrams</option>
-                <option value="p5buddy">games/visuals</option>
-                <option value="frenchbuddy">french</option>
-                <option value="freestyle">custom</option>
-            </select>
-            , and choose how creative it is 
-            <input type="range" id="temperature" step="0.01" min="0" max="1" value="0.7">
-            , and what kind of brain it has 
-            <select id="modelSelect" onchange="this.blur();">
-              <option value="gpt-3.5-turbo-1106">faster</option>
-              <option value="gpt-4">smarter</option>
-              <option value="gpt-4-1106-preview">experimental</option>
-          </select>
-            </h4>
-          </div>
-          <div class="modal-body">
-            <textarea placeholder="tell buddy what you expect of it, what kind of inputs they should expect, what kind of outputs they should provide..." id="systemPrompt">
-
-            </textarea>
-          </div>
-          <div class="modal-footer">
-            <h4>by <a href="johnnym.dev">johnnym.dev</a></h4>
-          </div>
-        </div>
+  </div>
+  <div class="container">
+    <div class="container__left" id="chat">
+      <div class="chat-history"></div>
+      <!-- <div class="chat-tools">
+        <label for="lastCode">last_code</label><input type="checkbox" id="lastCode">
+        <label for="includeCode">include_code</label><input type="checkbox" id="includeCode">
+      </div> -->
+      <div class="chat-input">
+        <textarea id="prompt-input" placeholder="Type your prompts here"></textarea>
+        <button id="submit-button">►</button>
+        <button id="loader">►</button>
       </div>
-<div style="display: none;">
+    </div>
+    <div class="resizer" id="dragMe"></div>
+    <div class="container__right" id="preview">
+      <div class="preview-body" id="resultPreviewPane">
+        <iframe class="emptyFrame" id="previewFrame"></iframe>
+        <textarea id="previewCode" style="display: none;"></textarea>
+      </div>
+    </div>
+  </div>
 
-<textarea id="creationbuddy">
+  <div id="myModal" class="modal ">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h4>Change what buddy creates:
+          <select id="personalitySelect" onchange="this.blur();">
+            <option value="creationbuddy">web apps</option>
+            <option value="slidesbuddy">slides</option>
+            <option value="mermaidbuddy">diagrams</option>
+            <option value="p5buddy">games/visuals</option>
+            <option value="freestyle">custom</option>
+          </select>
+          , and choose how creative it is
+          <input type="range" id="temperature" step="0.01" min="0" max="1" value="0.7">
+          , and what kind of brain it has
+          <select id="modelSelect" onchange="this.blur();">
+            <option value="gpt-3.5-turbo-1106">faster</option>
+            <option value="gpt-4">smarter</option>
+            <option value="gpt-4-1106-preview">experimental</option>
+          </select>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <textarea
+          placeholder="tell buddy what you expect of it, what kind of inputs they should expect, what kind of outputs they should provide..."
+          id="systemPrompt">
+            </textarea>
+      </div>
+      <div class="modal-footer">
+        <h4>by <a href="johnnym.dev">johnnym.dev</a></h4>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: none;">
+
+    <textarea id="creationbuddy">
 You analyze requirements and provide complete HTML, CSS, and JavaScript code in the same block.
 When asked to add features, you provide the modifications as well as the rest of the code, in the same output.
 Every time you provide an output it's a fully working and complete code with the required HTML, CSS, and JavaScript.
@@ -126,17 +151,7 @@ You output code delimited by three backticks and "html" and three backticks foll
 ```
 </textarea>
 
-<textarea id="creationbuddy_old">
-You are an expert in web development. You analyze requirements for simple web applets and provide complete code to fulfill those requirements whenever possible. You specialize in creating applets using HTML, CSS, and JavaScript.
-Your goal is to analyze the given requirements and determine if they can be solved using a single HTML file application with HTML, CSS, and JavaScript. If it is possible, you should provide the code in a single block, avoiding the use of external libraries unless absolutely necessary. However, it is important to evaluate the requirements first and search for a solution that does not require external libraries before considering them.
-When providing code, always include all the necessary HTML, CSS, and JavaScript in the same block. Do not provide just the modifications if asked to improve existing code. Additionally, make sure to include titles in the header of the produced HTML.
-If it is not possible to fulfill the requirements using a single HTML file application, you should explain why and suggest contacting administrators or a technical expert for assistance. If the request falls outside the scope of mini tools that can be built with HTML, CSS, and JavaScript, politely state that the request is out of scope while maintaining a conversational tone.
-Please note that it is preferable to use text on the screen instead of alerts in the code. If you need to refer to external libraries, use the provided CDN links for QRCode.js LINK TO USE[https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js], moment.js LINK TO USE[https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js], p5.js LINK TO USE[https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js], or ChartJS LINK TO USE[https://cdn.jsdelivr.net/npm/chart.js] , mermaid js LINK TO USE [https://cdn.jsdelivr.net/npm/mermaid@10.5.0/dist/mermaid.min.js].
-Remember to provide clear instructions to the user that they can check the preview window to see the result of the applet.
-if you ever need to add an image in a page just use this url https://source.unsplash.com/featured/?[enter here a search query for image, MAX 5 words]
-</textarea>
-
-<textarea id="mermaidbuddy">
+    <textarea id="mermaidbuddy">
 You only make mermaid diagrams based on user requests. When given any input you try you transpose it to mermaid script
 You output following this format, delimited by three backticks then "html" and three backticks:
 
@@ -148,11 +163,7 @@ You output following this format, delimited by three backticks then "html" and t
 ```
 </textarea>
 
-<textarea id="frenchbuddy">
- When given a input, you output it in correct French language.
-</textarea>
-
-<textarea id="slidesbuddy">
+    <textarea id="slidesbuddy">
 You only make slides with revealjs. When given any input you try you transpose it to a presentation that works in reveal.
 If you ever need to add an image in a page just use this url https://source.unsplash.com/featured/?[enter here a search query for image, MAX 5 words]
 You output following this format, delimited by three backticks then "html" and three backticks:
@@ -175,14 +186,14 @@ You output following this format, delimited by three backticks then "html" and t
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.0/reveal.min.js"></script>
     <script>
-        Reveal.initialize();
+      Reveal.initialize();
     </script>
 </body>
 </html>
 ```
 </textarea>
 
-<textarea id="p5buddy">
+    <textarea id="p5buddy">
 You turn user input into p5 js sketches.
 You output code delimited by three backticks and "html" and three backticks following this template:
 
@@ -203,12 +214,13 @@ You output code delimited by three backticks and "html" and three backticks foll
 ```
 </textarea>
 
-
-<textarea id="freestyle">
+    <textarea id="freestyle">
 </textarea>
-    <script src="divider.js"></script>
-    <script src="helpers.js"></script>
-    <script src="script.js"></script>
+  </div>
+
+  <script src="divider.js"></script>
+  <script src="helpers.js"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>
