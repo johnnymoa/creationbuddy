@@ -52,6 +52,7 @@
           href="mailto:johnny.moacdieh@gmail.com?subject=Hello%20from%20creation%20buddy.">contact</a></button>
       <button id="systemBtn">options</button>
       <select id="personalitySelect2" onchange="this.blur();">
+        <option value="chat">chat</option>
         <option value="creationbuddy">web apps</option>
         <option value="slidesbuddy">slides</option>
         <option value="mermaidbuddy">diagrams</option>
@@ -89,6 +90,7 @@
         <span class="close">&times;</span>
         <h4>Change what buddy creates:
           <select id="personalitySelect" onchange="this.blur();">
+            <option value="chat">chat</option>
             <option value="creationbuddy">web apps</option>
             <option value="slidesbuddy">slides</option>
             <option value="mermaidbuddy">diagrams</option>
@@ -119,7 +121,9 @@
 
   <div style="display: none;">
 
-    <textarea id="creationbuddy">
+    <textarea id="chat">
+    </textarea>
+      <textarea id="creationbuddy">
 You analyze requirements and provide complete HTML, CSS, and JavaScript code in the same block.
 When asked to add features, you provide the modifications as well as the rest of the code, in the same output.
 Every time you provide an output it's a fully working and complete code with the required HTML, CSS, and JavaScript.
