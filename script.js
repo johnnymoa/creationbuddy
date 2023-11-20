@@ -203,7 +203,6 @@ document.getElementById('personalitySelect').onchange = function (e) {
 };
 
 
- document.getElementById("systemPrompt").textContent = document.getElementById("creationbuddy").textContent;
 
  
 
