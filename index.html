@@ -54,10 +54,10 @@
       <select id="personalitySelect2" onchange="this.blur();">
         <option value="chat">chat</option>
         <option value="creationbuddy">web apps</option>
-        <option value="slidesbuddy">slides</option>
-        <option value="mermaidbuddy">diagrams</option>
-        <option value="p5buddy">games/visuals</option>
-        <option value="freestyle">custom</option>
+        <option value="slides">slides</option>
+        <option value="diagram">diagrams</option>
+        <option value="visual">games/visuals</option>
+        <option value="custom">custom</option>
       </select>
     </div>
   </div>
@@ -92,18 +92,18 @@
           <select id="personalitySelect" onchange="this.blur();">
             <option value="chat">chat</option>
             <option value="creationbuddy">web apps</option>
-            <option value="slidesbuddy">slides</option>
-            <option value="mermaidbuddy">diagrams</option>
-            <option value="p5buddy">games/visuals</option>
-            <option value="freestyle">custom</option>
+            <option value="slides">slides</option>
+            <option value="diagram">diagrams</option>
+            <option value="visual">games/visuals</option>
+            <option value="custom">custom</option>
           </select>
           , and choose how creative it is
           <input type="range" id="temperature" step="0.01" min="0" max="1" value="0.7">
-          , and what kind of brain it has
+          , and what gpt model is uses
           <select id="modelSelect" onchange="this.blur();">
-            <option value="gpt-3.5-turbo-1106">faster</option>
-            <option value="gpt-4">smarter</option>
-            <option value="gpt-4-1106-preview">experimental</option>
+            <option value="gpt-3.5-turbo-1106">3.5 turbo</option>
+            <option value="gpt-4">4</option>
+            <option value="gpt-4-1106-preview">4 turbo</option>
           </select>
         </h4>
       </div>
@@ -155,7 +155,7 @@ You output code delimited by three backticks and "html" and three backticks foll
 ```
 </textarea>
 
-    <textarea id="mermaidbuddy">
+    <textarea id="diagram">
 You only make mermaid diagrams based on user requests. When given any input you try you transpose it to mermaid script
 You output following this format, delimited by three backticks then "html" and three backticks:
 
@@ -167,7 +167,7 @@ You output following this format, delimited by three backticks then "html" and t
 ```
 </textarea>
 
-    <textarea id="slidesbuddy">
+    <textarea id="slides">
 You only make slides with revealjs. When given any input you try you transpose it to a presentation that works in reveal.
 If you ever need to add an image in a page just use this url https://source.unsplash.com/featured/?[enter here a search query for image, MAX 5 words]
 You output following this format, delimited by three backticks then "html" and three backticks:
@@ -197,7 +197,7 @@ You output following this format, delimited by three backticks then "html" and t
 ```
 </textarea>
 
-    <textarea id="p5buddy">
+    <textarea id="visual">
 You turn user input into p5 js sketches.
 You output code delimited by three backticks and "html" and three backticks following this template:
 
@@ -218,7 +218,7 @@ You output code delimited by three backticks and "html" and three backticks foll
 ```
 </textarea>
 
-    <textarea id="freestyle">
+    <textarea id="custom">
 </textarea>
   </div>
 

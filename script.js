@@ -203,6 +203,53 @@ document.getElementById('personalitySelect').onchange = function (e) {
 };
 
 
+function checkModelSelect() {
+    // Function to get the query string parameter
+    function getQueryStringParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Mapping shorthand model values to select option values
+    const modelMapping = {
+        '3.5t': 'gpt-3.5-turbo-1106',
+        '4': 'gpt-4',
+        '4t': 'gpt-4-1106-preview'
+    };
+
+    // Get model parameter from URL
+    const modelParam = getQueryStringParam('model');
+    if (modelParam && modelMapping[modelParam]) {
+        const selectElement = document.getElementById('modelSelect');
+        selectElement.value = modelMapping[modelParam];
+    }
+}
+
+// Call the function when the DOM content is fully loaded
+document.addEventListener('DOMContentLoaded', checkModelSelect);
+
+
+
+function isValidOption(value) {
+    const options = ["chat", "creationbuddy", "slides", "diagram", "visual", "custom"];
+    return options.includes(value);
+}
+
+// Function to check and set the personality based on URL parameter
+function checkPersonalitySelect() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const personalityParam = urlParams.get('template');
+    console.log(personalityParam);
+    if (isValidOption(personalityParam)) { 
+        document.getElementById('personalitySelect').value = personalityParam;
+        document.getElementById('personalitySelect2').value = personalityParam;
+        document.getElementById("systemPrompt").value = document.getElementById(personalityParam).textContent;
+    }
+}
+
+// Call the function when the DOM content is fully loaded
+document.addEventListener('DOMContentLoaded', checkPersonalitySelect);
+
 
  
 
