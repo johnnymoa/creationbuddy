@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
-  <title>creation buddy</title>
+  <title>Platinion GenAI Demo</title>
   <meta charset="UTF-8">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="style.css" />
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-D65KYL9C6V"></script>
+  <link rel="icon" href="https://bcgplatinion.com/wp-content/uploads/2020/12/bcgfavicon-200x200.png" sizes="192x192">
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -17,10 +18,39 @@
   
 </head>
 
+<style>
+
+@font-face {
+    font-family: 'Henderson Bold'; 
+    src: url('./BCGHenSansBold.otf') format('opentype');
+}
+
+
+@font-face {
+    font-family: 'Henderson Regular'; 
+    src: url('./BCGHenSansRegular.otf') format('opentype');
+}
+
+
+.header * {
+    font-family: 'Henderson Regular', sans-serif !important;
+    font-weight: unset !important;
+}
+
+  :root {
+    --main-color: #FFFFFF;
+    --frame-color: #7bdcb5;
+    --body-color: #FFFFFA;
+  }
+</style>
+
 <body>
   <div class="header">
-    <div class="title">creation buddy <small style="font-size: 10px;">by <a style="text-decoration: none; color: black;"
-          href="https://johnnym.dev" target="_blank">johnnym.dev</a></small></div>
+    <div class="title">
+        <a href="https://bcgplatinion.com">
+            <img src="https://bcgplatinion.com/wp-content/themes/corporate2020/img/layout/BCG-Platinion-logo-new.svg" aklt="" width="110">
+        </a>
+     </div>
     <div>
       <input class="apikey" id="apikey" style="display: none;" type="password">
       <button id="apikeyBtn">key</button>

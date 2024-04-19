@@ -48,6 +48,7 @@ async function submitPrompt() {
 
     messages.push(message);
 
+
     var buttons = document.getElementsByClassName("preview-button");
     if (buttons.length > 0) {
         var lastButton = buttons[buttons.length - 1];
@@ -251,6 +252,6 @@ function checkPersonalitySelect() {
 document.addEventListener('DOMContentLoaded', checkPersonalitySelect);
 
 
- 
+
 
 
