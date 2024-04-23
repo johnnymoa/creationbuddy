@@ -2,13 +2,12 @@
 <html lang="en">
 
 <head>
-  <title>Platinion GenAI Demo</title>
+  <title>creation buddy</title>
   <meta charset="UTF-8">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="style.css" />
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-D65KYL9C6V"></script>
-  <link rel="icon" href="https://bcgplatinion.com/wp-content/uploads/2020/12/bcgfavicon-200x200.png" sizes="192x192">
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -18,53 +17,18 @@
   
 </head>
 
-<style>
-
-@font-face {
-    font-family: 'Henderson Bold'; 
-    src: url('./BCGHenSansBold.otf') format('opentype');
-}
-
-
-@font-face {
-    font-family: 'Henderson Regular'; 
-    src: url('./BCGHenSansRegular.otf') format('opentype');
-}
-
-
-.header * {
-    font-family: 'Henderson Regular', sans-serif !important;
-    font-weight: unset !important;
-    text-transform: uppercase !important;
-    font-size: 0.8rem !important;
-}
-
-  :root {
-    --main-color: #FFFFFF;
-    --frame-color: #7bdcb5;
-    --body-color: #FFFFFA;
-  }
-
-  .assistant::before {
-    content: "Assistant: " !important;
-}
-</style>
-
 <body>
   <div class="header">
-    <div class="title">
-        <a href="https://bcgplatinion.com">
-            <img src="https://bcgplatinion.com/wp-content/themes/corporate2020/img/layout/BCG-Platinion-logo-new.svg" aklt="" width="110">
-        </a>
-     </div>
+    <div class="title">creation buddy <small style="font-size: 10px;">by <a style="text-decoration: none; color: black;"
+          href="https://johnnym.dev" target="_blank">johnnym.dev</a></small></div>
     <div>
       <input class="apikey" id="apikey" style="display: none;" type="password">
       <button id="apikeyBtn">key</button>
       <button id="clearBtn">clear</button>
       <button id="codeBtn">code</button>
       <button id="exportBtn">export</button>
-      <!-- <button id="contactBtn"><a
-          href="mailto:johnny.moacdieh@gmail.com?subject=Hello%20from%20creation%20buddy.">contact</a></button> -->
+      <button id="contactBtn"><a
+          href="mailto:johnny.moacdieh@gmail.com?subject=Hello%20from%20creation%20buddy.">contact</a></button>
       <button id="systemBtn">options</button>
       <select id="personalitySelect2" onchange="this.blur();">
         <option value="chat">chat</option>
@@ -152,8 +116,6 @@ p5.js LINK TO USE[https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js]
 ChartJS LINK TO USE[https://cdn.jsdelivr.net/npm/chart.js]
 mermaid js LINK TO USE [https://cdn.jsdelivr.net/npm/mermaid@10.5.0/dist/mermaid.min.js]
 If you ever need to add an image in a page just use this url https://source.unsplash.com/featured/?[enter here a search query for image, MAX 5 words]]&w=[an integer to indicate desired width]
-
-When explaining what you did you don't bother me with the technical details, i don't want to see you talk about coding details
 
 You output code delimited by three backticks and "html" and three backticks following this template:
 ```html
