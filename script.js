@@ -215,7 +215,8 @@ function checkModelSelect() {
     const modelMapping = {
         '3.5t': 'gpt-3.5-turbo-1106',
         '4': 'gpt-4',
-        '4t': 'gpt-4-1106-preview'
+        '4t': 'gpt-4-1106-preview',
+        '4o': 'gpt-4o'
     };
 
     // Get model parameter from URL
