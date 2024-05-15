@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', checkModelSelect);
 
 
 function isValidOption(value) {
-    const options = ["chat", "creationbuddy", "slides", "diagram", "visual", "custom"];
+    const options = ["chat", "creationbuddy", "slides", "diagram", "visual","resume", "custom"];
     return options.includes(value);
 }
 
