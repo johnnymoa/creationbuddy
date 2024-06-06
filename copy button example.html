@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Code Display with Copy Button</title>
+    <style>
+        code {
+            display: block;
+            padding: 10px;
+            font-family: Monaco, monospace;
+            background-color: #002b36;
+            color: #d7e3e5;
+            border-radius: 5px;
+            white-space: pre;
+            overflow: auto;
+            position: relative;
+        }
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .copy-button:active {
+            background-color: #0056b3;
+        }
+        .copy-button:focus {
+            outline: none;
+        }
+        .copy-button-feedback {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<h2>PHP Code</h2>
+
+<code id="code-block">
+&lt;?php
+// Database credentials
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "test_db";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn-&gt;connect_error) {
+    die("Connection failed: " . $conn-&gt;connect_error);
+}
+
+// SQL query to select data from users table
+$sql = "SELECT id, name, email FROM users";
+$result = $conn-&gt;query($sql);
+
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Users List&lt;/title&gt;
+    &lt;style&gt;
+        table {
+            width: 50%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;h2&gt;Users List&lt;/h2&gt;
+
+&lt;table&gt;
+    &lt;tr&gt;
+        &lt;th&gt;ID&lt;/th&gt;
+        &lt;th&gt;Name&lt;/th&gt;
+        &lt;th&gt;Email&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;?php
+    if ($result-&gt;num_rows &gt; 0) {
+        // Output data of each row
+        while($row = $result-&gt;fetch_assoc()) {
+            echo "&lt;tr&gt;&lt;td&gt;" . $row["id"]. "&lt;/td&gt;&lt;td&gt;" . $row["name"]. "&lt;/td&gt;&lt;td&gt;" . $row["email"]. "&lt;/td&gt;&lt;/tr&gt;";
+        }
+    } else {
+        echo "&lt;tr&gt;&lt;td colspan='3'&gt;No results found&lt;/td&gt;&lt;/tr&gt;";
+    }
+    ?&gt;
+&lt;/table&gt;
+
+&lt;?php
+// Close connection
+$conn-&gt;close();
+?&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+<button class="copy-button" id="copy-button" onclick="copyToClipboard()">Copy</button>
+</code>
+
+<script>
+    function copyToClipboard() {
+        var codeBlock = document.getElementById("code-block");
+        var textArea = document.createElement("textarea");
+        textArea.value = codeBlock.textContent;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+        
+        var copyButton = document.getElementById("copy-button");
+        copyButton.classList.add("copy-button-feedback");
+        setTimeout(function() {
+            copyButton.classList.remove("copy-button-feedback");
+        }, 1000);
+        
+        console.log("Code copied to clipboard!");
+    }
+</script>
+
+</body>
+</html>
