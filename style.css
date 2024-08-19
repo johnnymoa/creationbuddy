@@ -1,407 +1,365 @@
-/*** Base ***/
+/* Webkit browsers (Chrome, Safari, newer versions of Opera) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
 
-:root {
-    --main-color: #A5CAF9;
-    --frame-color: #d1e6ffa6;
-    --body-color: #FFFAFF;
-  }
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
 
+::-webkit-scrollbar-thumb {
+    background: #55555530;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #55555530;
+}
+
+/* Firefox */
 * {
-    font-family: Arial, Helvetica, sans-serif;
+    scrollbar-width: thin;
+    scrollbar-color: #55555530 #f1f1f1;
+}
+
+/* For Internet Explorer and Edge */
+body {
+    -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
 body {
+    display: flex;
     margin: 0;
-    min-height: 100dvh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--body-color);
-
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden;
 }
 
-/*** HEADER ***/
-.header {
-    padding: 0px 10px;
-    align-items: center;
-    background: var(--main-color);
-    box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
-    color: black;
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    font-weight: bold;
-    overflow-x: hidden;
-    max-height: 45px;
-    height: 45px;
-    /* border-bottom: #342E37 1px solid;  */
+input,
+select,
+button {
+    border: unset;
+    padding: 4px;
 }
 
-.emptyFrame {
-    /* background-color: #ffd2cda6; */
-    background-color: var(--frame-color);
-}
-
-
-@media screen and (max-width: 600px) {
-    .header {
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .title {
-        display: none;
-    }
-
-}
-
-select {
-    height: 30px;
-    background: none;
-    font-weight: bold;
-    font-size: 1rem;
-    border: 2px black solid;
-    border-radius: 5px;
-    text-decoration: unset;
-}
-
-*:focus {
-    outline-color: rgba(0, 0, 0, 0.605);
-}
-
-.preview-button, .chat-tools button, .chat-tools select {
-    background: #00000024;
-    border-radius: 5px;
-}
-
-.preview-button,
-.header button, .chat-tools button, .chat-tools select  {
+select,
+button {
     cursor: pointer;
-    margin: 0px 5px 0px 5px;
-    height: 100%;
-    background: none;
-    font-weight: bold;
-    font-size: 1rem;
-    border: none;
-    text-decoration: none;
-    border-radius: 5px;
 }
 
-.preview-button,
-.header button:hover, .chat-tools button , .chat-tools select{
-    background: #0000001e;
-    border-radius: 5px;
+
+button {
+    background-color: rgb(206, 206, 206);
 }
 
-/*** ======= ***/
-
-.container {
-    display: flex;
-    flex: 1;
+button:hover {
+    background-color: rgb(156, 156, 156);
 }
 
-.container__right {
-    flex: 1;
-    min-width: 20%;
-    display: flex;
-    flex-direction: column;
-}
-
-.container__left {
-    width: 50%;
-    min-width: 20%;
-    display: flex;
-    flex-direction: column;
-}
-
-.resizer {
-    cursor: col-resize;
-    width: 2px;
-    background-color:#342E37;
-}
-/* 
-.resizer:hover {
-    box-shadow: -2px 0px 0px 1px #342E37;
-} */
-
-
-/*** Chat Section ***/
-.chat-history {
-    text-align: justify;
-    overflow-y: auto;
-    height: 72vh;
-    resize: vertical;
-}
-
-.chat-history div {
+.sidebar,
+.main,
+.iframe-container {
     padding: 10px;
-    margin: 0;
-    min-height: 3rem;
-    font-size: 1.1em;
-    text-align: justify;
-    white-space: pre-wrap;
+    border-right: 1px solid #ccc;
 }
 
-.user {
-    /* background-color: rgb(255 215 214 / 29%); */
-    background-color: rgb(214 233 255 / 29%);
+.iframe-container {
+    padding: unset;
 }
 
-.assistant::before {
-    content: "Buddy: ";
-}
-
-.user::before {
-    content: "You: ";
-}
-
-.chat-input {
-    padding: 5px;
-    height: 15vh;
-    flex: 1;
+.sidebar {
+    min-width: 20%;
+    width: 20%;
+    background-color: #f4f4f4;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    /* border-top: 2px solid rgba(0, 0, 0, 0.307); */
-    background-color: #FFFAFF;
-}
-.chat-tools {
-    display: flex;
-    padding: 5px;
-    margin: 5px 5px 0px 5px ;
-    align-items: center;
-    justify-content: start;
-    gap: 5px;
-    border: 1px solid rgba(0, 0, 0, 0.307);
-    background-color: #FFFAFF;
-    border-radius: 5px;
-    overflow: auto;
-    box-shadow: 0 0 15px rgba(0,0,0,.1);
-
-
+    order: 1;
+    overflow-y: scroll;
 }
 
-#prompt-input {
+.main {
     flex-grow: 1;
-    margin-right: 5px;
+    display: flex;
+    flex-direction: column;
+    order: 2;
+}
+
+.iframe-container {
+    width: 50%;
+    order: 3;
+    border-left: 1px solid #ccc;
+}
+
+.chat-list {
+    list-style: none;
+    padding: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 40vh;
+}
+
+.chat-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.chat-list li:hover {
+    background-color: #e0e0e0;
+}
+
+.chat-list .title {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-height: 3em;
+}
+
+.delete-btn,
+.rename-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.delete-btn {
+    color: black;
+}
+.delete-btn:hover,.rename-btn:hover {
+ background-color: unset;
+ color: #717171;
+}
+
+.rename-btn {
+    color: black;
+    transform: rotate(-241deg);
+}
+
+.chat-area {
+    flex-grow: 1;
+    overflow-y: auto;
+    border-bottom: 1px solid #ccc;
     padding: 10px;
-    resize: none;
-    border-radius: 5px;
-    font-size: 1.1em;
-    border: 1px solid rgba(0, 0, 0, 0.307);
-    background-color: #FFFAFF;
-    box-shadow: 0 0 15px rgba(0,0,0,.1);
-
 }
 
-#prompt-input:scope {
-    border-color: initial;
-    border: 1px solid rgba(0, 0, 0, 0.307);
+.input-area {
+    display: flex;
+    border-top: 1px solid #ccc;
 }
 
-#submit-button {
-    font-weight: bold;
-    font-size: 20px;
-    padding: 4px;
-    margin: 0;
-    background-color: #FFFAFF;
-    border-width: 1px;
-    border-style: solid;
-    color: rgb(118, 118, 118);
-    width: 30px;
-    cursor: pointer;
-    border-radius: 5px;
-    border: 1px solid rgba(0, 0, 0, 0.307);
-    box-shadow: 0 0 15px rgba(0,0,0,.1);
-
+.input-area {
+    display: flex;
+    align-items: center;
 }
 
-#submit-button:hover {
-    background: #f8f8f8;
-    color: rgb(96, 96, 96);
-}
-
-#loader {
-    display: none;
-    font-weight: bold;
-    font-size: 20px;
-    padding: 4px;
-    margin: 0;
-    background-color: #FFFAFF;
-    border-width: 1px;
-    border-style: solid;
-    color: rgb(118, 118, 118);
-    width: 30px;
-    cursor: pointer;
-    border-radius: 5px;
-    border: 2px solid rgba(0, 0, 0, 0.307);
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid #000;
+    width: 24px;
+    height: 24px;
     animation: spin 1s linear infinite;
+    margin-left: 10px;
 }
 
 @keyframes spin {
-
-    0% {
-        background-color: #FFFAFF;
-
-    }
-
-    50% {
-        background-color: #76767689;
-
-    }
-
-    100% {
-        background-color: #FFFAFF;
-
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-/*** Preview Section ***/
+.input-area textarea {
+    flex-grow: 1;
+    padding: 10px;
+    height: 100px;
+    border: none;
+    resize: unset;
+}
 
-.preview-body {
-    overflow-y: auto;
-    flex: 1;
-    resize: vertical;
+.input-area button {
+    padding: 10px;
+}
+
+.resizer {
+    width: 12px;
+    background-color: #ccc;
+    cursor: ew-resize;
+    position: relative;
+    order: 2;
+}
+
+.resizer::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 64px;
+    background-color: #b0b0b0;
+    transition: background-color 0.3s ease;
+}
+
+.resizer:hover::before {
+    background-color: #a0a0a0;
+}
+
+.resizer::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 24px;
+    background-image:
+        radial-gradient(circle, #808080 2px, transparent 2px),
+        radial-gradient(circle, #808080 2px, transparent 2px),
+        radial-gradient(circle, #808080 2px, transparent 2px),
+        radial-gradient(circle, #808080 2px, transparent 2px),
+        radial-gradient(circle, #808080 2px, transparent 2px),
+        radial-gradient(circle, #808080 2px, transparent 2px);
+    background-size: 12px 8px;
+    background-position:
+        0 0, 8px 0,
+        0 8px, 8px 8px,
+        0 16px, 8px 16px;
+    background-repeat: no-repeat;
+}
+
+.resizer:active {
+    cursor: grabbing;
+}
+
+.resizer:active::before {
+    background-color: #909090;
+}
+
+.apikey-input {
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
 }
 
-#previewCode {
-    display: none;
-    flex: 1;
-    margin: 5px;
-    max-height: 90vh !important;
+.apikey-input input,
+.apikey-input select {
+    margin-bottom: 5px;
+}
+
+.system-prompt-config {
+    margin-top: 20px;
+}
+
+.system-prompt-config label {
     display: block;
-    padding: 10px;
-    font-family: Monaco, monospace;
-    background-color: #002b36;
-    color: #d7e3e5;
-    border-radius: 5px;
-    white-space: pre;
-    overflow: auto;
+    margin-bottom: 5px;
 }
 
-iframe {
-    flex: 1;
+.system-prompt-config select,
+.system-prompt-config button {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.modal textarea {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
+.modal .close-btn,
+.modal .save-btn {
+    margin-top: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.modal .close-btn {
+    background-color: #f44336;
+    color: white;
     border: none;
-    overflow: auto;
-    resize: vertical;
+    float: right;
+}
+
+.modal .save-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    float: left;
+}
+
+pre {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    position: relative;
+    overflow: hidden;
+    padding-top: 24px;
+}
+
+pre.collapsed {
+    padding-top: unset;
+    padding: 14px;
+}
+
+pre.collapsed code {
+    display: none;
 }
 
 code {
-    display: block;
-    padding: 10px;
-    font-family: Monaco, monospace;
-    background-color: #002b36;
-    color: #d7e3e5;
-    border-radius: 5px;
-    white-space: pre;
-    overflow: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
 }
 
-.apikey {
-
-    height: 20px;
-
+.code-buttons {
+    width: 100%;
+    justify-content: end;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    gap: 5px;
 }
 
-
-/********/
-/* The Modal (background) */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 301;
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; 
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-  
-  /* Modal Content */
-  .modal-content {
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 0;
-    border: 1px solid #888;
-    width: 95%;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-    -webkit-animation-name: animatetop;
-    -webkit-animation-duration: 0.4s;
-    animation-name: animatetop;
-    animation-duration: 0.4s
-  }
-  
-  /* Add Animation */
-  @-webkit-keyframes animatetop {
-    from {top:-300px; opacity:0} 
-    to {top:0; opacity:1}
-  }
-  
-  @keyframes animatetop {
-    from {top:-300px; opacity:0}
-    to {top:0; opacity:1}
-  }
-  
-  /* The Close Button */
-  .close {
-    color: white;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-    color: #000;
-    text-decoration: none;
+.code-buttons button {
+    padding: 2px 5px;
+    font-size: 12px;
     cursor: pointer;
-  }
-  
-  .modal-header {
-    padding: 2px 16px;
-    /* background-color: rgb(255 157 142); */
-    background-color: var(--main-color);
-    color: black;
-  }
-  
-  .modal-body {
-    padding: 6px 16px;
-    margin: auto;
-  }
-  
-  .modal-footer {
-    padding: 2px 16px;
-    /* background-color: rgb(255 157 142); */
-    background-color: var(--main-color);
-    color: black;
-  }
-  
-  #systemPrompt {
-    width: 97%;
-    height: 300px;
-    padding: 10px;
-    font-family: Monaco, monospace;
-    background-color: #002b36;
-    color: #d7e3e5;
-    border-radius: 5px;
-    overflow: auto;
-    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
 }
 
-#contactBtn > a {
-        color: inherit;            
-        text-decoration: none;   
-        background-color: none;
-}
-
-#contactBtn > a:hover, #contactBtn > a:active {
-    color: inherit;
-    text-decoration: none;
-    background-color: none;
+.code-buttons button:hover {
+    background-color: #e0e0e0;
 }

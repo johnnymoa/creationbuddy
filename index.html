@@ -1,240 +1,483 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <title>creation buddy</title>
-  <meta charset="UTF-8">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="style.css" />
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D65KYL9C6V"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-D65KYL9C6V');
-  </script>
-  
-</head>
-
-<body>
-  <div class="header">
-    <div class="title">creation buddy
-      <small style="font-size: 10px;">by <a style="text-decoration: none; color: black;"
-          href="https://johnnym.dev" target="_blank">johnnym.dev</a></small>
-        </div>
-    <div>
-      <input class="apikey" id="apikey" style="display: none;" type="password">
-      <button id="apikeyBtn">key</button>
-      <button id="clearBtn">clear</button>
-      <button id="codeBtn">code</button>
-      <button id="exportBtn">export</button>
-      <button id="contactBtn"><a
-          href="mailto:johnny.moacdieh@gmail.com?subject=Hello%20from%20creation%20buddy.">contact</a></button>
-      <button id="systemBtn">options</button>
-      <select id="personalitySelect2" onchange="this.blur();">
-        <option value="chat">chat</option>
-        <option value="creationbuddy">web apps</option>
-        <option value="slides">slides</option>
-        <option value="diagram">diagrams</option>
-        <option value="visual">games/visuals</option>
-        <option value="resume">resume/cv</option>
-        <option value="custom">custom</option>
-      </select>
-    </div>
-  </div>
-  <div class="container">
-    <div class="container__left" id="chat">
-      <div class="chat-history"></div>
-      <!-- <div class="chat-tools">
-        <label for="lastCode">last_code</label><input type="checkbox" id="lastCode">
-        <label for="includeCode">include_code</label><input type="checkbox" id="includeCode">
-      </div> -->
-      <div class="chat-input">
-        <textarea id="prompt-input" placeholder="Type your prompts here"></textarea>
-        <button id="submit-button">►</button>
-        <button id="loader">►</button>
-      </div>
-    </div>
-    <div class="resizer" id="dragMe"></div>
-    <div class="container__right" id="preview">
-      <div class="preview-body" id="resultPreviewPane">
-        <iframe class="emptyFrame" id="previewFrame"></iframe>
-        <textarea id="previewCode" style="display: none;"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <div id="myModal" class="modal ">
-    <!-- Modal content -->
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="close">&times;</span>
-        <h4>Change what buddy creates:
-          <select id="personalitySelect" onchange="this.blur();">
-            <option value="chat">chat</option>
-            <option value="creationbuddy">web apps</option>
-            <option value="slides">slides</option>
-            <option value="diagram">diagrams</option>
-            <option value="visual">games/visuals</option>
-            <option value="visual">resume/cv</option>
-            <option value="custom">custom</option>
-          </select>
-          , and choose how creative it is
-          <input type="range" id="temperature" step="0.01" min="0" max="1" value="0.7">
-          , and what gpt model is uses
-          <select id="modelSelect" onchange="this.blur();">
-            <option value="gpt-4o">4o</option>
-            <option value="gpt-4o-mini">4o mini</option>
-            <option value="gpt-3.5-turbo-1106">3.5 turbo</option>
-          </select>
-        </h4>
-      </div>
-      <div class="modal-body">
-        <textarea
-          placeholder="tell buddy what you expect of it, what kind of inputs they should expect, what kind of outputs they should provide..."
-          id="systemPrompt">
-            </textarea>
-      </div>
-      <div class="modal-footer">
-        <h4>by <a href="johnnym.dev">johnnym.dev</a></h4>
-      </div>
-    </div>
-  </div>
-
-  <div style="display: none;">
-
-<textarea id="chat"></textarea>
-      <textarea id="creationbuddy">
-You analyze requirements and provide complete HTML, CSS, and JavaScript code in the same block.
-When asked to add features, you provide the modifications as well as the rest of the code, in the same output.
-Every time you provide an output it's a fully working and complete code with the required HTML, CSS, and JavaScript.
-You include titles in the header of the produced HTML.
-If the request falls outside the scope of  building tools with HTML, CSS, and JavaScript, politely state that the request is out of scope while maintaining a conversational tone.
-You do not use the alert() function in javascript.
-You avoid the use of external libraries unless absolutely necessary, If you need to refer to external libraries, use the provided links:
-QRCode.js LINK TO USE[https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js] 
-moment.js LINK TO USE[https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js] 
-p5.js LINK TO USE[https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js]
-ChartJS LINK TO USE[https://cdn.jsdelivr.net/npm/chart.js]
-mermaid js LINK TO USE [https://cdn.jsdelivr.net/npm/mermaid@10.5.0/dist/mermaid.min.js]
-
-If you ever need to add an image add a div as a placeholder
-
-You output code delimited by three backticks and "html" and three backticks following this template:
-```html
-<!DOCTYPE html>
 <html>
+
 <head>
-    [dependency links and meta tags here]
-    <title>[title of the app]</title>
-    <style>[CSS code here]</style>
-</head>
-<body>
-  <script>[javascript code here]</script>
-    [HTML code here]
-</body>
-</html>
-```
-</textarea>
-
-    <textarea id="diagram">
-You only make mermaid diagrams based on user requests. When given any input you try you transpose it to mermaid script
-You output following this format, delimited by three backticks then "html" and three backticks:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10.5.0/dist/mermaid.min.js"></script>
-<div class="mermaid">
-[INSERT MERMAID SCRIPT HERE]
-</div>
-```
-</textarea>
-
-    <textarea id="slides">
-You only make slides with revealjs. When given any input you try you transpose it to a presentation that works in reveal.
-If you ever need to add an image add a div as a placeholder
-You output following this format, delimited by three backticks then "html" and three backticks:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>[here you add a fitting title]</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.0/reveal.min.css">
-    <style>
-       
-    </style>
+    <title>Creation Buddy</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
-    <div class="reveal">
-       [Here you transpose user requests into presentations]
+    <div class="sidebar">
+        <div>
+            <p style="font-weight: bold;">creation buddy <small style="font-size: 10px;">by <a
+                        style="text-decoration: none; color: black;" href="https://johnnym.dev"
+                        target="_blank">johnnym.dev</a></small></p>
+            <ul class="chat-list" id="chat-list"></ul>
+        </div>
+        <div>
+            <div class="apikey-input">
+                <label for="apikey">API Key:</label>
+                <input type="text" id="apikey" placeholder="Enter API Key">
+                <label for="model">Model:</label>
+                <select id="model">
+                    <option value="gpt-4o">GPT-4o</option>
+                    <option value="gpt-4o-mini">gpt-4o-mini</option>
+                </select>
+            </div>
+            <div class="system-prompt-config">
+                <label for="system-prompt-select">System Prompt:</label>
+                <select id="system-prompt-select"></select>
+                <button id="new-prompt-btn">Create New System Prompt</button>
+            </div>
+            <div class="system-prompt-config">
+                <label for="system-prompt-select">Chat:</label>
+                <button id="delete-all-btn">Delete All</button>
+                <button id="export-all-btn">Export All</button>
+                <input type="file" id="import-all-input" style="display:none;">
+                <button id="import-all-btn">Import</button>
+                <button id="new-chat-btn">New Chat</button>
+            </div>
+        </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.0/reveal.min.js"></script>
+    <div class="main" id="main-chat" style="width: calc(100% - 60%);">
+        <div class="chat-area" id="chat-area"></div>
+        <div class="input-area">
+            <textarea id="chat-input" rows="2" placeholder="Type your message here..."></textarea>
+            <button id="send-btn" style="height: 100%;">Send</button>
+            <div id="spinner" class="spinner" style="display:none;"></div>
+        </div>
+
+    </div>
+    <div class="resizer" id="resizer"></div>
+    <div class="iframe-container" id="iframe-container">
+        <iframe id="genai-iframe" width="100%" height="100%"></iframe>
+    </div>
+
+    <!-- Modal for editing system prompts -->
+    <div id="system-prompt-modal" class="modal">
+        <textarea id="system-prompt-text" placeholder="Enter your system prompt here..."></textarea>
+        <button id="save-prompt-btn" class="save-btn">Save</button>
+        <button id="close-modal-btn" class="close-btn">Close</button>
+    </div>
+
     <script>
-      Reveal.initialize();
+        const chatListElement = document.getElementById('chat-list');
+        const chatAreaElement = document.getElementById('chat-area');
+        const chatInputElement = document.getElementById('chat-input');
+        const newChatButton = document.getElementById('new-chat-btn');
+        const sendButton = document.getElementById('send-btn');
+        const deleteAllButton = document.getElementById('delete-all-btn');
+        const exportAllButton = document.getElementById('export-all-btn');
+        const importAllButton = document.getElementById('import-all-btn');
+        const importAllInput = document.getElementById('import-all-input');
+        let iframe = document.getElementById('genai-iframe');
+        const resizer = document.getElementById('resizer');
+        const mainChat = document.getElementById('main-chat');
+        const iframeContainer = document.getElementById('iframe-container');
+        const apiKeyInput = document.getElementById('apikey');
+        const modelSelect = document.getElementById('model');
+        const systemPromptSelect = document.getElementById('system-prompt-select');
+        const newPromptButton = document.getElementById('new-prompt-btn');
+        const systemPromptModal = document.getElementById('system-prompt-modal');
+        const systemPromptText = document.getElementById('system-prompt-text');
+        const savePromptButton = document.getElementById('save-prompt-btn');
+        const closeModalButton = document.getElementById('close-modal-btn');
+
+        let chats = JSON.parse(localStorage.getItem('chats')) || [];
+        let systemPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [
+            { name: 'Chat', content: '' },
+            { name: 'Bee', content: 'You are a bee that talks in bzbzbz.' }
+        ];
+        let currentChatIndex = 0;
+        let editingPromptIndex = null;
+
+        function renderChatList() {
+            chatListElement.innerHTML = '';
+            chats.forEach((chat, index) => {
+                const chatName = chat.name || 'New chat';
+                const li = document.createElement('li');
+
+                const titleSpan = document.createElement('span');
+                titleSpan.textContent = chatName;
+                titleSpan.classList.add('title');
+                li.appendChild(titleSpan);
+
+                const renameBtn = document.createElement('button');
+                renameBtn.textContent = '✏';
+                renameBtn.classList.add('rename-btn');
+                renameBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const newName = prompt('Enter new chat name:', chatName);
+                    if (newName !== null) {
+                        renameChat(index, newName);
+                    }
+                });
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'x';
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (confirm('Are you sure you want to delete this chat?')) {
+                        deleteChat(index);
+                    }
+                });
+
+                li.appendChild(renameBtn);
+                li.appendChild(deleteBtn);
+                li.addEventListener('click', () => loadChat(index));
+                chatListElement.appendChild(li);
+            });
+        }
+
+        function renderSystemPrompts() {
+            systemPromptSelect.innerHTML = '';
+            systemPrompts.forEach((prompt, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = prompt.name;
+                systemPromptSelect.appendChild(option);
+            });
+            loadSelectedSystemPrompt();
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function formatMessage(content) {
+            const codeBlockRegex = /^```(\w+)\s*\n([\s\S]*?)^```\s*$/gm;
+            let index = 0;
+            return content.replace(codeBlockRegex, (match, language, code) => {
+                const escapedCode = escapeHtml(code.trim());
+                const isHtml = language === 'html';
+                const uniqueId = `code-block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                const buttons = `<div class="code-buttons">
+                    <p style="flex-grow:1;padding-left:10px;margin:unset;">${language}</p>
+                    <button id="btnCollapse" onclick="toggleCollapse('${uniqueId}')">${isHtml ? 'Show' : 'Hide'}</button>
+                    <button onclick="copyToClipboard('${uniqueId}')">Copy</button>
+                    ${isHtml ? `<button onclick="runHtml('${uniqueId}')">Run</button>` : ''}
+                </div>`;
+                return `<pre id="${uniqueId}" class="${isHtml ? 'collapsed' : ''}"><code ${isHtml ? 'data-html="true"' : ''}>${escapedCode}</code>${buttons}</pre>`;
+            });
+        }
+
+        function loadChat(index) {
+            currentChatIndex = index;
+            chatAreaElement.innerHTML = chats[index].messages.map(msg => {
+                const formattedContent = formatMessage(msg.content);
+                return `<p><strong>${msg.role === 'user' ? 'You' : 'Bot'}:</strong> ${formattedContent}</p>`;
+            }).join('');
+            loadSelectedSystemPrompt();
+        }
+
+        function addNewChat() {
+            chats.push({ name: '', messages: [], selectedPromptIndex: 0 });
+            saveChats();
+            renderChatList();
+            loadChat(chats.length - 1);
+        }
+
+        function deleteChat(index) {
+            chats.splice(index, 1);
+            saveChats();
+            renderChatList();
+            if (chats.length > 0) {
+                loadChat(0);
+            } else {
+                chatAreaElement.innerHTML = '';
+                addNewChat();
+            }
+        }
+
+        function renameChat(index, newName) {
+            chats[index].name = newName;
+            saveChats();
+            renderChatList();
+        }
+
+        function saveChats() {
+            localStorage.setItem('chats', JSON.stringify(chats));
+        }
+
+        function saveSystemPrompts() {
+            localStorage.setItem('systemPrompts', JSON.stringify(systemPrompts));
+        }
+
+        function saveSelectedSystemPrompt() {
+            chats[currentChatIndex].selectedPromptIndex = systemPromptSelect.value;
+            saveChats();
+        }
+
+        function loadSelectedSystemPrompt() {
+            const selectedPromptIndex = chats[currentChatIndex]?.selectedPromptIndex || 0;
+            systemPromptSelect.value = selectedPromptIndex;
+        }
+
+        let awaitingResponse = false;
+        async function sendMessage() {
+            const message = chatInputElement.value;
+            if (message.trim() === '') return;
+
+            // Hide the send button and show the spinner
+            sendButton.style.display = 'none';
+            document.getElementById('spinner').style.display = 'block';
+            awaitingResponse = true;
+
+
+            chats[currentChatIndex].messages.push({ role: 'user', content: message });
+            saveChats();
+            loadChat(currentChatIndex);
+            chatInputElement.value = '';
+
+            const systemPromptIndex = systemPromptSelect.value;
+            const systemPrompt = systemPrompts[systemPromptIndex]?.content || "You are a helpful assistant.";
+
+            const responseMessage = await getCompletion([{ role: "system", content: systemPrompt }, ...chats[currentChatIndex].messages], modelSelect.value);
+            if (responseMessage) {
+                chats[currentChatIndex].messages.push(responseMessage);
+                saveChats();
+                loadChat(currentChatIndex);
+            }
+
+            // Revert the spinner back to the send button
+            sendButton.style.display = 'block';
+            document.getElementById('spinner').style.display = 'none';
+            awaitingResponse = false;
+
+        }
+
+
+        async function getCompletion(messages, model) {
+            let API_URL = "https://api.openai.com/v1/chat/completions";
+            let API_KEY = apiKeyInput.value;
+
+            if (!API_KEY) {
+                chats[currentChatIndex].messages.push({ role: 'assistant', content: 'You need to add an <a href="https://platform.openai.com/account/api-keys" target="_blank">openai</a> API key to use this tool. Please enter your key.' });
+                saveChats();
+                loadChat(currentChatIndex);
+                return null;
+            }
+
+            try {
+                let response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: messages
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    return {
+                        content: data.choices[0].message.content,
+                        role: 'assistant'
+                    };
+                } else {
+                    throw new Error('API request failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                chats[currentChatIndex].messages.push({ role: 'assistant', content: 'Request failed. Please make sure you provided a valid API key and have a working internet connection.' });
+                saveChats();
+                loadChat(currentChatIndex);
+                return null;
+            }
+        }
+
+        function copyToClipboard(uniqueId) {
+            const codeElement = document.querySelector(`#${uniqueId} code`);
+            const textArea = document.createElement('textarea');
+            textArea.value = codeElement.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Copied to clipboard!');
+        }
+
+        function runHtml(uniqueId) {
+            const codeElement = document.querySelector(`#${uniqueId} code`);
+            if (codeElement.dataset.html) {
+
+                let newIframe = document.createElement('iframe');
+                newIframe.id = iframe.id;
+                newIframe.width = iframe.width;
+                newIframe.height = iframe.height;
+                newIframe.className = iframe.className;
+                Array.from(iframe.attributes).forEach(attr => {
+                    if (attr.name !== 'id') {
+                        newIframe.setAttribute(attr.name, attr.value);
+                    }
+                });
+                newIframe.style.cssText = iframe.style.cssText;
+                iframe.parentNode.replaceChild(newIframe, iframe);
+                iframe = newIframe;
+
+                iframe.contentDocument.open();
+                iframe.contentDocument.write(codeElement.textContent);
+                iframe.contentDocument.close();
+            }
+        }
+
+        function toggleCollapse(uniqueId) {
+            const preElement = document.getElementById(uniqueId);
+            if (preElement) {
+                preElement.classList.toggle('collapsed');
+                const button = document.getElementById("btnCollapse");
+                if (preElement.classList.contains('collapsed')) {
+                    button.textContent = 'Show';
+                } else {
+                    button.textContent = 'Hide';
+                }
+            }
+        }
+
+        function openSystemPromptModal(index = null) {
+            editingPromptIndex = index;
+            if (index !== null) {
+                systemPromptText.value = systemPrompts[index].content;
+            } else {
+                systemPromptText.value = '';
+            }
+            systemPromptModal.style.display = 'block';
+        }
+
+        function closeSystemPromptModal() {
+            systemPromptModal.style.display = 'none';
+        }
+
+        function saveSystemPrompt() {
+            const content = systemPromptText.value.trim();
+            if (content) {
+                if (editingPromptIndex !== null) {
+                    systemPrompts[editingPromptIndex].content = content;
+                } else {
+                    const name = prompt('Enter a name for the system prompt:', 'New System Prompt');
+                    if (name) {
+                        systemPrompts.push({ name, content });
+                    }
+                }
+                saveSystemPrompts();
+                renderSystemPrompts();
+                closeSystemPromptModal();
+            }
+        }
+
+        function deleteAllChats() {
+            if (confirm('Are you sure you want to delete all chats?')) {
+                chats = [];
+                saveChats();
+                renderChatList();
+                chatAreaElement.innerHTML = '';
+                addNewChat();
+            }
+        }
+
+        function exportAllData() {
+            const data = {
+                chats,
+                systemPrompts,
+                apiKey: localStorage.getItem('apikey')
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "app_data.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function importAllData(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const data = JSON.parse(e.target.result);
+                    chats = data.chats || [];
+                    systemPrompts = data.systemPrompts || [];
+                    if (data.apiKey) {
+                        localStorage.setItem('apikey', data.apiKey);
+                        apiKeyInput.value = data.apiKey;
+                    }
+                    saveChats();
+                    saveSystemPrompts();
+                    renderChatList();
+                    renderSystemPrompts();
+                    if (chats.length > 0) {
+                        loadChat(0);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        deleteAllButton.addEventListener('click', deleteAllChats);
+        exportAllButton.addEventListener('click', exportAllData);
+        importAllButton.addEventListener('click', () => importAllInput.click());
+        importAllInput.addEventListener('change', importAllData);
+
+        newChatButton.addEventListener('click', addNewChat);
+        sendButton.addEventListener('click', sendMessage);
+        chatInputElement.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey &&!awaitingResponse) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        newPromptButton.addEventListener('click', () => openSystemPromptModal());
+        savePromptButton.addEventListener('click', saveSystemPrompt);
+        closeModalButton.addEventListener('click', closeSystemPromptModal);
+        systemPromptSelect.addEventListener('change', saveSelectedSystemPrompt);
+
+        let isResizing = false;
+
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            let offsetRight = document.body.offsetWidth - (e.clientX);
+            mainChat.style.width = `calc(100% - ${offsetRight + 5}px)`;
+            iframeContainer.style.width = `${offsetRight}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isResizing = false;
+        });
+
+        apiKeyInput.addEventListener('change', () => {
+            localStorage.setItem('apikey', apiKeyInput.value);
+        });
+
+        const savedApiKey = localStorage.getItem('apikey');
+        if (savedApiKey) {
+            apiKeyInput.value = savedApiKey;
+        }
+
+        renderSystemPrompts();
+        renderChatList();
+        if (chats.length === 0) {
+            addNewChat();
+        } else {
+            loadChat(0);
+        }
     </script>
-</body>
-</html>
-```
-</textarea>
-
-    <textarea id="visual">
-You turn user input into p5 js sketches.
-You output code delimited by three backticks and "html" and three backticks following this template:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    [dependency links and meta tags here]
-    <title>[title of the app]</title>
-    <style>[CSS code here]</style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
-</head>
-<body>
-  <script>[javascript code here]</script>
-    [HTML code here]
-</body>
-</html>
-```
-</textarea>
-
-<textarea id="resume">
-  You make Resumes and CVs using HTML, CSS, and JavaScript code that you provide in the same block.
-When asked to add features, you provide the modifications as well as the rest of the code, in the same output.
-Every time you provide an output it's a fully working and complete code with the required HTML, CSS, and JavaScript.
-You include titles in the header of the produced HTML.
-
-You do not use the alert() function in javascript.
-
-If you ever need to add an image add a colored <div>img name placeholder</div> as a placeholder
-
-You output code delimited by three backticks and "html" and three backticks following this template:
-```html
-<!DOCTYPE html>
-<html>
-<head>
- [DO NOT USE EXPTERNAL DEPENDANCIES]
-    [meta tags here]
-    <title>[title]</title>
-    <style>[CSS code here]</style>
-</head>
-<body>
-  <script>[javascript code here]</script>
-    [HTML code here]
-</body>
-</html>
-```
-</textarea>
-
-    <textarea id="custom"></textarea>
-  </div>
-
-  <script src="divider.js"></script>
-  <script src="helpers.js"></script>
-  <script src="script.js"></script>
 </body>
 
 </html>
