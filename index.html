@@ -211,7 +211,7 @@
                 const uniqueId = `creation-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                 const buttons = `<div class="code-buttons">
                     <p style="flex-grow:1;padding-left:10px;margin:unset;">${language}</p>
-                    <button id="btnCollapse" onclick="toggleCollapse('${uniqueId}')">${isHtml ? 'Show' : 'Hide'}</button>
+                    <button id="btnCollapse_${uniqueId}" onclick="toggleCollapse('${uniqueId}')">${isHtml ? 'Show' : 'Hide'}</button>
                     <button onclick="copyToClipboard('${uniqueId}')">Copy</button>
                     ${isHtml ? `<button onclick="downloadHtml('${uniqueId}')">Download</button>` : ''}
                     ${isHtml ? `<button onclick="runHtml('${uniqueId}')">Run</button>` : ''}
@@ -401,7 +401,7 @@
             const preElement = document.getElementById(uniqueId);
             if (preElement) {
                 preElement.classList.toggle('collapsed');
-                const button = document.getElementById("btnCollapse");
+                const button = document.getElementById("btnCollapse_"+uniqueId);
                 if (preElement.classList.contains('collapsed')) {
                     button.textContent = 'Show';
                 } else {
