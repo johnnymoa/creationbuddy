@@ -224,7 +224,7 @@
             currentChatIndex = index;
             chatAreaElement.innerHTML = chats[index].messages.map(msg => {
                 const formattedContent = formatMessage(msg.content);
-                return `<p><strong>${msg.role === 'user' ? 'You' : 'Bot'}:</strong> ${formattedContent}</p>`;
+                return `<p><strong>${msg.role === 'user' ? 'You' : 'Buddy'}:</strong> ${formattedContent}</p>`;
             }).join('');
             loadSelectedSystemPrompt();
         }
