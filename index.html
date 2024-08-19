@@ -87,11 +87,60 @@
 
         let chats = JSON.parse(localStorage.getItem('chats')) || [];
         let systemPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [
+            { name: 'WebApps', content: '' }, //I have a certain number of txt files called this name .txt these text files are hosted in a folder called /prompts/ can you load them here into their respective content brackets this is the js code on a front end web page 
             { name: 'Chat', content: '' },
-            { name: 'Bee', content: 'You are a bee that talks in bzbzbz.' }
+            { name: 'P5JS', content: '' },
+            { name: 'mermaidDiagrams', content: '' }
         ];
         let currentChatIndex = 0;
         let editingPromptIndex = null;
+
+        // Function to load prompt content from the server
+        async function loadPromptContent(name) {
+            const response = await fetch(`/prompts/${name}.txt`);
+            if (response.ok) {
+                return await response.text();
+            } else {
+                console.error(`Failed to load content for ${name}`);
+                return '';
+            }
+        }
+
+        // Function to load default system prompts and merge them with stored prompts
+        async function initializeSystemPrompts() {
+            const defaultPrompts = [
+                { name: 'WebApps', content: '' },
+                { name: 'P5js', content: '' },
+                { name: 'mermaidDiagram', content: '' },
+                { name: 'Chat', content: '' }
+            ];
+
+            for (let prompt of defaultPrompts) {
+                prompt.content = await loadPromptContent(prompt.name);
+            }
+
+            const storedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
+
+            // Merge the loaded default prompts with the stored prompts
+            defaultPrompts.forEach(defaultPrompt => {
+                const existingPrompt = storedPrompts.find(p => p.name === defaultPrompt.name);
+                if (!existingPrompt) {
+                    storedPrompts.push(defaultPrompt);
+                }
+            });
+
+            // Update the global systemPrompts variable
+            systemPrompts = storedPrompts;
+
+            // Save updated systemPrompts to localStorage
+            localStorage.setItem('systemPrompts', JSON.stringify(systemPrompts));
+
+            // Re-render the system prompts UI
+            renderSystemPrompts();
+        }
+
+        // Call the function after other initializations
+        initializeSystemPrompts();
 
         function renderChatList() {
             chatListElement.innerHTML = '';
@@ -132,6 +181,7 @@
             });
         }
 
+        
         function renderSystemPrompts() {
             systemPromptSelect.innerHTML = '';
             systemPrompts.forEach((prompt, index) => {
@@ -433,7 +483,7 @@
         newChatButton.addEventListener('click', addNewChat);
         sendButton.addEventListener('click', sendMessage);
         chatInputElement.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey &&!awaitingResponse) {
+            if (e.key === 'Enter' && !e.shiftKey && !awaitingResponse) {
                 e.preventDefault();
                 sendMessage();
             }
