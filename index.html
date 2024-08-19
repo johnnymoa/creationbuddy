@@ -181,7 +181,7 @@
             });
         }
 
-        
+
         function renderSystemPrompts() {
             systemPromptSelect.innerHTML = '';
             systemPrompts.forEach((prompt, index) => {
@@ -208,11 +208,12 @@
             return content.replace(codeBlockRegex, (match, language, code) => {
                 const escapedCode = escapeHtml(code.trim());
                 const isHtml = language === 'html';
-                const uniqueId = `code-block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                const uniqueId = `creation-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                 const buttons = `<div class="code-buttons">
                     <p style="flex-grow:1;padding-left:10px;margin:unset;">${language}</p>
                     <button id="btnCollapse" onclick="toggleCollapse('${uniqueId}')">${isHtml ? 'Show' : 'Hide'}</button>
                     <button onclick="copyToClipboard('${uniqueId}')">Copy</button>
+                    ${isHtml ? `<button onclick="downloadHtml('${uniqueId}')">Download</button>` : ''}
                     ${isHtml ? `<button onclick="runHtml('${uniqueId}')">Run</button>` : ''}
                 </div>`;
                 return `<pre id="${uniqueId}" class="${isHtml ? 'collapsed' : ''}"><code ${isHtml ? 'data-html="true"' : ''}>${escapedCode}</code>${buttons}</pre>`;
@@ -356,6 +357,20 @@
             document.execCommand('copy');
             document.body.removeChild(textArea);
             alert('Copied to clipboard!');
+        }
+
+        function downloadHtml(uniqueId) {
+            const codeElement = document.querySelector(`#${uniqueId} code`);
+            if (codeElement.dataset.html) {
+                var file = new Blob([codeElement.textContent], { type: 'text/html' });
+                var fileURL = URL.createObjectURL(file);
+                var a = document.createElement("a");
+                a.href = fileURL;
+                a.download = uniqueId + ".html";
+                document.body.appendChild(a);
+                a.click();
+            }
+
         }
 
         function runHtml(uniqueId) {
