@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Storage Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        pre {
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:active {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Creation Buddy - Debug</h1>
+    <pre id="localStorageContent" style="height: 50vh;"></pre>
+    <button id="copyButton">Copy to Clipboard</button>
+</div>
+
+<script>
+    function printLocalStorage() {
+        const localStorageContent = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            let value = localStorage.getItem(key);
+            try {
+                value = JSON.parse(value);
+            } catch (e) {
+                // If value is not JSON, leave it as is
+            }
+            localStorageContent[key] = value;
+        }
+        document.getElementById('localStorageContent').textContent = JSON.stringify(localStorageContent, null, 4);
+    }
+
+    function copyToClipboard() {
+        const localStorageContent = document.getElementById('localStorageContent').textContent;
+        navigator.clipboard.writeText(localStorageContent).then(() => {
+            alert('Local Storage contents copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', printLocalStorage);
+    document.getElementById('copyButton').addEventListener('click', copyToClipboard);
+</script>
+
+</body>
+</html>
