@@ -245,7 +245,7 @@
             currentChatIndex = index;
             chatAreaElement.innerHTML = chats[index].messages.map(msg => {
                 const formattedContent = formatMessage(msg.content);
-                return `<p><strong>${msg.role === 'user' ? 'You' : 'Buddy'}:</strong> ${formattedContent} ${msg.role === 'user' ? `<div style="width:100%;text-align:center;"><button onclick="startOverFrom(${index},'${msg.uniqueId}')" >Start over here?</button></div>` : ''} <hr></p>`;
+                return `<p>${msg.role === 'user' ? `<div style="width:100%;text-align:center;margin-bottom:5px;"><button style='border-radius:4px' onclick="startOverFrom(${index},'${msg.uniqueId}')" >Start over here?</button></div><hr>` : ''}<strong>${msg.role === 'user' ? 'You' : 'Buddy'}:</strong> ${formattedContent}</p>`;
             }).join('');
             loadSelectedSystemPrompt();
         }
