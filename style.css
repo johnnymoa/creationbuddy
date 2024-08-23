@@ -150,6 +150,7 @@ button:hover {
     overflow-y: auto;
     border-bottom: 1px solid #ccc;
     padding: 10px;
+    white-space: pre-wrap;
 }
 
 .input-area {
@@ -325,6 +326,7 @@ pre {
     position: relative;
     overflow: hidden;
     padding-top: 24px;
+    margin:unset;
 }
 
 pre.collapsed {

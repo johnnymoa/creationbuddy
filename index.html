@@ -48,7 +48,6 @@
             <button id="send-btn" style="height: 100%;">Send</button>
             <div id="spinner" class="spinner" style="display:none;"></div>
         </div>
-
     </div>
     <div class="resizer" id="resizer"></div>
     <div class="iframe-container" id="iframe-container">
@@ -87,7 +86,7 @@
 
         let chats = JSON.parse(localStorage.getItem('chats')) || [];
         let systemPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [
-            { name: 'WebApps', content: '' }, //I have a certain number of txt files called this name .txt these text files are hosted in a folder called /prompts/ can you load them here into their respective content brackets this is the js code on a front end web page 
+            { name: 'WebApps', content: '' }, 
             { name: 'Chat', content: '' },
             { name: 'P5JS', content: '' },
             { name: 'mermaidDiagrams', content: '' }
@@ -181,7 +180,6 @@
             });
         }
 
-
         function renderSystemPrompts() {
             systemPromptSelect.innerHTML = '';
             systemPrompts.forEach((prompt, index) => {
@@ -203,6 +201,8 @@
         }
 
         function formatMessage(content) {
+            //content is a string that MAY contain tripple backticke
+            //if content contains an un-even number of ``` then return
             const codeBlockRegex = /^```(\w+)\s*\n([\s\S]*?)^```\s*$/gm;
             let index = 0;
             return content.replace(codeBlockRegex, (match, language, code) => {
@@ -244,7 +244,7 @@
             currentChatIndex = index;
             chatAreaElement.innerHTML = chats[index].messages.map(msg => {
                 const formattedContent = formatMessage(msg.content);
-                return `<p>${msg.role === 'user' ? `<div style="width:100%;text-align:center;margin-bottom:5px;"><button style='border-radius:4px' onclick="startOverFrom(${index},'${msg.uniqueId}')" >Start over here?</button></div><hr>` : ''}<strong>${msg.role === 'user' ? 'You' : 'Buddy'}:</strong> ${formattedContent}</p>`;
+                return `<div style ="margin-top:8px">${msg.role === 'user' ? `<div style="width:100%;text-align:center;margin-bottom:5px;"><button style='border-radius:4px' onclick="startOverFrom(${index},'${msg.uniqueId}')" >Start over here?</button></div><hr>` : ''}<strong>${msg.role === 'user' ? 'You' : 'Buddy'}:</strong> ${formattedContent}</div>`;
             }).join('');
             loadSelectedSystemPrompt();
         }
@@ -324,7 +324,6 @@
             awaitingResponse = false;
 
         }
-
 
         async function getCompletion(messages, model) {
             let API_URL = "https://api.openai.com/v1/chat/completions";
