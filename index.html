@@ -240,7 +240,6 @@
             }
         }
 
-
         function loadChat(index) {
             currentChatIndex = index;
             chatAreaElement.innerHTML = chats[index].messages.map(msg => {
@@ -510,6 +509,22 @@
                 reader.readAsText(file);
             }
         }
+
+        function assignUniqueIdsToMessages() {
+            chats.forEach(chat => {
+                chat.messages.forEach(message => {
+                    if (!message.uniqueId) {
+                        const uniqueIdBase = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                        if (message.role === 'user') {
+                            message.uniqueId = `prompt-${uniqueIdBase}`;
+                        }
+                    }
+                });
+            });
+        }
+
+        assignUniqueIdsToMessages(chats);
+        saveChats();
 
         deleteAllButton.addEventListener('click', deleteAllChats);
         exportAllButton.addEventListener('click', exportAllData);
