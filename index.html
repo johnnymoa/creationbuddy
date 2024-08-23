@@ -274,7 +274,7 @@
 
         let awaitingResponse = false;
         async function sendMessage() {
-            const message = chatInputElement.value;
+            const message = escapeHtml(chatInputElement.value);
             if (message.trim() === '') return;
 
             // Hide the send button and show the spinner
