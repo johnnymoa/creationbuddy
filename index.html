@@ -86,7 +86,7 @@
 
         let chats = JSON.parse(localStorage.getItem('chats')) || [];
         let systemPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [
-            { name: 'WebApps', content: '' }, 
+            { name: 'WebApps', content: '' },
             { name: 'Chat', content: '' },
             { name: 'P5JS', content: '' },
             { name: 'mermaidDiagrams', content: '' }
@@ -199,10 +199,13 @@
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
         }
-
+ 
         function formatMessage(content) {
-            //content is a string that MAY contain tripple backticke
-            //if content contains an un-even number of ``` then return
+            const tripleBacktickCount = (content.match(/\n```/g) || []).length;
+            if (tripleBacktickCount % 2 !== 0) {
+                content+="\n```"
+            }
+
             const codeBlockRegex = /^```(\w+)\s*\n([\s\S]*?)^```\s*$/gm;
             let index = 0;
             return content.replace(codeBlockRegex, (match, language, code) => {
