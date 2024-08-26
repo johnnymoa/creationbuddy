@@ -11,35 +11,28 @@
 <body>
     <div class="sidebar">
         <div>
-            <p style="font-weight: bold;">creation buddy <small style="font-size: 10px;">by <a
-                        style="text-decoration: none; color: black;" href="https://johnnym.dev"
-                        target="_blank">johnnym.dev</a></small></p>
-            <ul class="chat-list" id="chat-list"></ul>
-        </div>
-        <div>
-            <div class="apikey-input">
-                <label for="apikey">API Key:</label>
+            <p style="font-weight: bold;">creation buddy <small style="font-size: 10px;">by <a style="text-decoration: none; color: black;" href="https://johnnym.dev" target="_blank">johnnym.dev</a></small></p>
+            <div class="controls">
+                <label for="apikey"><small>Config:</small></label>
                 <input type="text" id="apikey" placeholder="Enter API Key">
-                <label for="model">Model:</label>
                 <select id="model">
                     <option value="gpt-4o">GPT-4o</option>
                     <option value="gpt-4o-mini">gpt-4o-mini</option>
                 </select>
             </div>
-            <div class="system-prompt-config">
-                <label for="system-prompt-select">System Prompt:</label>
-                <select id="system-prompt-select"></select>
-                <button id="new-prompt-btn">Create New System Prompt</button>
-            </div>
-            <div class="system-prompt-config">
-                <label for="system-prompt-select">Chat:</label>
+            <div class="controls">
+                <label><small>Chat:</small></label>
+                <select style="width: 100%;;" id="system-prompt-select"></select>
                 <button id="delete-all-btn">Delete All</button>
-                <button id="export-all-btn">Export All</button>
+                <div style="display: flex; justify-content: space-between;margin-bottom: unset;">
+                    <button style="width: 49%;" id="export-all-btn">Export</button>
+                    <button style="width: 49%;"id="import-all-btn">Import</button>
+                </div>
                 <input type="file" id="import-all-input" style="display:none;">
-                <button id="import-all-btn">Import</button>
                 <button id="new-chat-btn">New Chat</button>
             </div>
         </div>
+        <ul class="chat-list" id="chat-list"></ul>
     </div>
     <div class="main" id="main-chat" style="width: calc(100% - 60%);">
         <div class="chat-area" id="chat-area"></div>
@@ -52,13 +45,6 @@
     <div class="resizer" id="resizer"></div>
     <div class="iframe-container" id="iframe-container">
         <iframe id="genai-iframe" width="100%" height="100%"></iframe>
-    </div>
-
-    <!-- Modal for editing system prompts -->
-    <div id="system-prompt-modal" class="modal">
-        <textarea id="system-prompt-text" placeholder="Enter your system prompt here..."></textarea>
-        <button id="save-prompt-btn" class="save-btn">Save</button>
-        <button id="close-modal-btn" class="close-btn">Close</button>
     </div>
 
     <script>
@@ -78,19 +64,9 @@
         const apiKeyInput = document.getElementById('apikey');
         const modelSelect = document.getElementById('model');
         const systemPromptSelect = document.getElementById('system-prompt-select');
-        const newPromptButton = document.getElementById('new-prompt-btn');
-        const systemPromptModal = document.getElementById('system-prompt-modal');
-        const systemPromptText = document.getElementById('system-prompt-text');
-        const savePromptButton = document.getElementById('save-prompt-btn');
-        const closeModalButton = document.getElementById('close-modal-btn');
 
         let chats = JSON.parse(localStorage.getItem('chats')) || [];
-        let systemPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [
-            { name: 'WebApps', content: '' },
-            { name: 'Chat', content: '' },
-            { name: 'P5JS', content: '' },
-            { name: 'mermaidDiagrams', content: '' }
-        ];
+        let systemPrompts = [];
         let currentChatIndex = 0;
         let editingPromptIndex = null;
 
@@ -105,40 +81,27 @@
             }
         }
 
+
         // Function to load default system prompts and merge them with stored prompts
         async function initializeSystemPrompts() {
-            const defaultPrompts = [
-                { name: 'WebApps', content: '' },
-                { name: 'P5js', content: '' },
-                { name: 'mermaidDiagram', content: '' },
-                { name: 'Chat', content: '' }
+            systemPrompts = [
+            { name: 'Make WebApps', content: '' },
+            { name: 'Just Chat', content: '' },
+            { name: 'Use P5js', content: '' },
+            { name: 'Use Mermaid diagrams', content: '' }
             ];
-
-            for (let prompt of defaultPrompts) {
+            for (let prompt of systemPrompts) {
                 prompt.content = await loadPromptContent(prompt.name);
             }
-
-            const storedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
-
-            // Merge the loaded default prompts with the stored prompts
-            defaultPrompts.forEach(defaultPrompt => {
-                const existingPrompt = storedPrompts.find(p => p.name === defaultPrompt.name);
-                if (!existingPrompt) {
-                    storedPrompts.push(defaultPrompt);
-                }
+            systemPromptSelect.innerHTML = '';
+            systemPrompts.forEach((prompt, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = prompt.name;
+                systemPromptSelect.appendChild(option);
             });
-
-            // Update the global systemPrompts variable
-            systemPrompts = storedPrompts;
-
-            // Save updated systemPrompts to localStorage
-            localStorage.setItem('systemPrompts', JSON.stringify(systemPrompts));
-
-            // Re-render the system prompts UI
-            renderSystemPrompts();
+            loadSelectedSystemPrompt();
         }
-
-        // Call the function after other initializations
         initializeSystemPrompts();
 
         function renderChatList() {
@@ -178,17 +141,6 @@
                 li.addEventListener('click', () => loadChat(index));
                 chatListElement.appendChild(li);
             });
-        }
-
-        function renderSystemPrompts() {
-            systemPromptSelect.innerHTML = '';
-            systemPrompts.forEach((prompt, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = prompt.name;
-                systemPromptSelect.appendChild(option);
-            });
-            loadSelectedSystemPrompt();
         }
 
         function escapeHtml(unsafe) {
@@ -253,7 +205,7 @@
         }
 
         function addNewChat() {
-            chats.push({ name: '', messages: [], selectedPromptIndex: 0 });
+            chats.push({ name: '', messages: [], selectedPromptIndex: systemPromptSelect.value });
             saveChats();
             renderChatList();
             loadChat(chats.length - 1);
@@ -279,10 +231,6 @@
 
         function saveChats() {
             localStorage.setItem('chats', JSON.stringify(chats));
-        }
-
-        function saveSystemPrompts() {
-            localStorage.setItem('systemPrompts', JSON.stringify(systemPrompts));
         }
 
         function saveSelectedSystemPrompt() {
@@ -432,37 +380,6 @@
             }
         }
 
-        function openSystemPromptModal(index = null) {
-            editingPromptIndex = index;
-            if (index !== null) {
-                systemPromptText.value = systemPrompts[index].content;
-            } else {
-                systemPromptText.value = '';
-            }
-            systemPromptModal.style.display = 'block';
-        }
-
-        function closeSystemPromptModal() {
-            systemPromptModal.style.display = 'none';
-        }
-
-        function saveSystemPrompt() {
-            const content = systemPromptText.value.trim();
-            if (content) {
-                if (editingPromptIndex !== null) {
-                    systemPrompts[editingPromptIndex].content = content;
-                } else {
-                    const name = prompt('Enter a name for the system prompt:', 'New System Prompt');
-                    if (name) {
-                        systemPrompts.push({ name, content });
-                    }
-                }
-                saveSystemPrompts();
-                renderSystemPrompts();
-                closeSystemPromptModal();
-            }
-        }
-
         function deleteAllChats() {
             if (confirm('Are you sure you want to delete all chats?')) {
                 chats = [];
@@ -476,7 +393,6 @@
         function exportAllData() {
             const data = {
                 chats,
-                systemPrompts,
                 apiKey: localStorage.getItem('apikey')
             };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
@@ -495,15 +411,12 @@
                 reader.onload = function (e) {
                     const data = JSON.parse(e.target.result);
                     chats = data.chats || [];
-                    systemPrompts = data.systemPrompts || [];
                     if (data.apiKey) {
                         localStorage.setItem('apikey', data.apiKey);
                         apiKeyInput.value = data.apiKey;
                     }
                     saveChats();
-                    saveSystemPrompts();
                     renderChatList();
-                    renderSystemPrompts();
                     if (chats.length > 0) {
                         loadChat(0);
                     }
@@ -512,27 +425,10 @@
             }
         }
 
-        function assignUniqueIdsToMessages() {
-            chats.forEach(chat => {
-                chat.messages.forEach(message => {
-                    if (!message.uniqueId) {
-                        const uniqueIdBase = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-                        if (message.role === 'user') {
-                            message.uniqueId = `prompt-${uniqueIdBase}`;
-                        }
-                    }
-                });
-            });
-        }
-
-        assignUniqueIdsToMessages(chats);
-        saveChats();
-
         deleteAllButton.addEventListener('click', deleteAllChats);
         exportAllButton.addEventListener('click', exportAllData);
         importAllButton.addEventListener('click', () => importAllInput.click());
         importAllInput.addEventListener('change', importAllData);
-
         newChatButton.addEventListener('click', addNewChat);
         sendButton.addEventListener('click', sendMessage);
         chatInputElement.addEventListener('keydown', (e) => {
@@ -541,10 +437,6 @@
                 sendMessage();
             }
         });
-
-        newPromptButton.addEventListener('click', () => openSystemPromptModal());
-        savePromptButton.addEventListener('click', saveSystemPrompt);
-        closeModalButton.addEventListener('click', closeSystemPromptModal);
         systemPromptSelect.addEventListener('change', saveSelectedSystemPrompt);
 
         let isResizing = false;
@@ -552,18 +444,15 @@
         resizer.addEventListener('mousedown', (e) => {
             isResizing = true;
         });
-
         document.addEventListener('mousemove', (e) => {
             if (!isResizing) return;
             let offsetRight = document.body.offsetWidth - (e.clientX);
             mainChat.style.width = `calc(100% - ${offsetRight + 5}px)`;
             iframeContainer.style.width = `${offsetRight}px`;
         });
-
         document.addEventListener('mouseup', () => {
             isResizing = false;
         });
-
         apiKeyInput.addEventListener('change', () => {
             localStorage.setItem('apikey', apiKeyInput.value);
         });
@@ -573,8 +462,8 @@
             apiKeyInput.value = savedApiKey;
         }
 
-        renderSystemPrompts();
         renderChatList();
+
         if (chats.length === 0) {
             addNewChat();
         } else {
