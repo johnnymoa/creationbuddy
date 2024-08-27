@@ -17,8 +17,7 @@
             <div class="controls">
                 <label><small>Model:</small></label>
                 <select id="model">
-                    <option provider="openai" value="gpt-4o">ChatGPT gpt-4o</option>
-                    <option provider="openai" value="gpt-4o-mini">ChatGPT 4o</option>
+                    <option provider="openai" value="gpt-4o">ChatGPT 4o</option>
                     <option provider="openai" value="gpt-4o-mini">ChatGPT 4o mini</option>
                     <option provider="anthropic" value="claude-3-5-sonnet-20240620">Claude 3.5 sonnet</option>
                     <option provider="anthropic" value="claude-3-opus-20240229">Claude 3 opus</option>
@@ -518,7 +517,17 @@
             isResizing = false;
         });
 
+        const savedModel = localStorage.getItem('selectedModel');
+        if (savedModel) {
+            const modelSelect = document.getElementById('model');
+            modelSelect.value = savedModel;
+            modelSelect.dispatchEvent(new Event('change'));
+        }
+
         modelSelect.addEventListener('change', () => {
+            const selectedModel = modelSelect.value;
+            localStorage.setItem('selectedModel', selectedModel);
+
             provider = document.getElementById('model').selectedOptions[0].getAttribute('provider');
             const savedApiKey = localStorage.getItem(provider + '_apikey');
             if (savedApiKey) {
