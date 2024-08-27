@@ -174,7 +174,7 @@
                     <button id="btnCollapse_${uniqueId}" onclick="toggleCollapse('${uniqueId}')">${isHtml ? 'Show' : 'Hide'}</button>
                     <button onclick="copyToClipboard('${uniqueId}')">Copy</button>
                     ${isHtml ? `<button onclick="downloadHtml('${uniqueId}')">Download</button>` : ''}
-                    ${isHtml ? `<button onclick="runHtml('${uniqueId}')">Run</button>` : ''}
+                    ${isHtml ? `<button class="run-button" onclick="runHtml('${uniqueId}')">Run</button>` : ''}
                 </div>`;
                 return `<pre id="${uniqueId}" class="${isHtml ? 'collapsed' : ''}"><code ${isHtml ? 'data-html="true"' : ''}>${escapedCode}</code>${buttons}</pre>`;
             });
@@ -206,6 +206,7 @@
                 const formattedContent = formatMessage(msg.content);
                 return `<div style ="margin-top:8px">${msg.role === 'user' ? `<div style="width:100%;text-align:center;margin-bottom:5px;"><button style='border-radius:4px' onclick="startOverFrom(${index},'${msg.uniqueId}')" >Start over here?</button></div><hr style="border: 0; border-top: 1px dashed #ccc; height: 1px;">` : ''}<strong>${msg.role === 'user' ? 'You' : 'Buddy'}:</strong> ${formattedContent}</div>`;
             }).join('');
+            document.querySelectorAll('.run-button').length && document.querySelectorAll('.run-button')[document.querySelectorAll('.run-button').length - 1].click();
             loadSelectedSystemPrompt();
         }
 
