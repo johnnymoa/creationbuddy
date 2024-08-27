@@ -11,7 +11,9 @@
 <body>
     <div class="sidebar">
         <div>
-            <p style="font-weight: bold;">creation buddy <small style="font-size: 10px;">by <a style="text-decoration: none; color: black;" href="https://johnnym.dev" target="_blank">johnnym.dev</a></small></p>
+            <p style="font-weight: bold;">creation buddy <small style="font-size: 10px;">by <a
+                        style="text-decoration: none; color: black;" href="https://johnnym.dev"
+                        target="_blank">johnnym.dev</a></small></p>
             <div class="controls">
                 <label for="apikey"><small>Config:</small></label>
                 <input type="text" id="apikey" placeholder="Enter API Key">
@@ -22,11 +24,15 @@
             </div>
             <div class="controls">
                 <label><small>Chat:</small></label>
-                <select style="width: 100%;;" id="system-prompt-select"></select>
+                <select style="width: 100%;" id="system-prompt-select"></select>
+                <select style="width: 100%;" id="memory-mode-select">
+                    <option value="last">Remember Only Last Respone</option>
+                    <option value="everything">Remember Everything</option>
+                </select>
                 <button id="delete-all-btn">Delete All</button>
                 <div style="display: flex; justify-content: space-between;margin-bottom: unset;">
                     <button style="width: 49%;" id="export-all-btn">Export</button>
-                    <button style="width: 49%;"id="import-all-btn">Import</button>
+                    <button style="width: 49%;" id="import-all-btn">Import</button>
                 </div>
                 <input type="file" id="import-all-input" style="display:none;">
                 <button id="new-chat-btn">New Chat</button>
@@ -64,6 +70,7 @@
         const apiKeyInput = document.getElementById('apikey');
         const modelSelect = document.getElementById('model');
         const systemPromptSelect = document.getElementById('system-prompt-select');
+        const memoryModeSelect = document.getElementById('memory-mode-select');
 
         let chats = JSON.parse(localStorage.getItem('chats')) || [];
         let systemPrompts = [];
@@ -81,14 +88,13 @@
             }
         }
 
-
         // Function to load default system prompts and merge them with stored prompts
         async function initializeSystemPrompts() {
             systemPrompts = [
-            { name: 'Make WebApps', content: '' },
-            { name: 'Just Chat', content: '' },
-            { name: 'Use P5js', content: '' },
-            { name: 'Use Mermaid diagrams', content: '' }
+                { name: 'Make WebApps', content: '' },
+                { name: 'Just Chat', content: '' },
+                { name: 'Use P5js', content: '' },
+                { name: 'Use Mermaid diagrams', content: '' }
             ];
             for (let prompt of systemPrompts) {
                 prompt.content = await loadPromptContent(prompt.name);
@@ -151,13 +157,12 @@
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
         }
- 
+
         function formatMessage(content) {
             const tripleBacktickCount = (content.match(/\n```/g) || []).length;
             if (tripleBacktickCount % 2 !== 0) {
-                content+="\n```"
+                content += "\n```"
             }
-
             const codeBlockRegex = /^```(\w+)\s*\n([\s\S]*?)^```\s*$/gm;
             let index = 0;
             return content.replace(codeBlockRegex, (match, language, code) => {
@@ -199,7 +204,7 @@
             currentChatIndex = index;
             chatAreaElement.innerHTML = chats[index].messages.map(msg => {
                 const formattedContent = formatMessage(msg.content);
-                return `<div style ="margin-top:8px">${msg.role === 'user' ? `<div style="width:100%;text-align:center;margin-bottom:5px;"><button style='border-radius:4px' onclick="startOverFrom(${index},'${msg.uniqueId}')" >Start over here?</button></div><hr>` : ''}<strong>${msg.role === 'user' ? 'You' : 'Buddy'}:</strong> ${formattedContent}</div>`;
+                return `<div style ="margin-top:8px">${msg.role === 'user' ? `<div style="width:100%;text-align:center;margin-bottom:5px;"><button style='border-radius:4px' onclick="startOverFrom(${index},'${msg.uniqueId}')" >Start over here?</button></div><hr style="border: 0; border-top: 1px dashed #ccc; height: 1px;">` : ''}<strong>${msg.role === 'user' ? 'You' : 'Buddy'}:</strong> ${formattedContent}</div>`;
             }).join('');
             loadSelectedSystemPrompt();
         }
@@ -262,7 +267,21 @@
             const systemPromptIndex = systemPromptSelect.value;
             const systemPrompt = systemPrompts[systemPromptIndex]?.content || "You are a helpful assistant.";
 
-            const responseMessage = await getCompletion([{ role: "system", content: systemPrompt }, ...chats[currentChatIndex].messages], modelSelect.value);
+            let messagesToSend = [{ role: "system", content: systemPrompt }, ...chats[currentChatIndex].messages];
+
+            console.log(messagesToSend)
+            if (memoryModeSelect.value == "last") {
+                if (messagesToSend.length > 3) {
+                    messagesToSend = [
+                        messagesToSend[0],
+                        ...messagesToSend.slice(-3)
+                    ];
+                }
+            }
+            console.log(messagesToSend)
+
+
+            const responseMessage = await getCompletion(messagesToSend, modelSelect.value);
             if (responseMessage) {
                 chats[currentChatIndex].messages.push(responseMessage);
                 saveChats();
