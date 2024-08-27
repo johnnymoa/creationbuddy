@@ -20,9 +20,9 @@
                     <option provider="openai" value="gpt-4o">ChatGPT gpt-4o</option>
                     <option provider="openai" value="gpt-4o-mini">ChatGPT 4o</option>
                     <option provider="openai" value="gpt-4o-mini">ChatGPT 4o mini</option>
-                    <!-- <option provider="anthropic" value="claude-3-5-sonnet-20240620">Claude 3.5 sonnet</option>
+                    <option provider="anthropic" value="claude-3-5-sonnet-20240620">Claude 3.5 sonnet</option>
                     <option provider="anthropic" value="claude-3-opus-20240229">Claude 3 opus</option>
-                    <option provider="anthropic" value="claude-3-haiku-20240307">Claude 3 haiku</option> -->
+                    <option provider="anthropic" value="claude-3-haiku-20240307">Claude 3 haiku</option>
                     <option provider="mistral" value="codestral-latest">Mistral Codestral</option>
                     <option provider="mistral" value="mistral-large-latest">Mistral Large</option>
                     <option provider="groq" value="llama-3.1-70b-versatile">Groq Hosted Meta Lama 3.1 70B</option>
@@ -279,7 +279,7 @@
             const systemPromptIndex = systemPromptSelect.value;
             const systemPrompt = systemPrompts[systemPromptIndex]?.content || "You are a helpful assistant.";
 
-            let messagesToSend = [{ role: "system", content: systemPrompt }, ...chats[currentChatIndex].messages];
+            let messagesToSend = JSON.parse(JSON.stringify([{ role: "system", content: systemPrompt }, ...chats[currentChatIndex].messages]));
             messagesToSend = messagesToSend.filter(message => message.role !== 'error');
             messagesToSend = messagesToSend.map(message => (delete message.uniqueId, message));
 
@@ -326,19 +326,20 @@
                 case "groq":
                     API_URL = "https://api.groq.com/openai/v1/chat/completions";
                     break;
-                default:
-                    break;
                 case "anthropic":
+                    messages[0].role = "user";
+                    messages.splice(1, 0, { role: "assistant", content: "OK" });
                     API_URL = "https://api.anthropic.com/v1/messages";
                     headers = {
                         "Content-Type": "application/json",
                         "anthropic-version": "2023-06-01",
                         "x-api-key": `${API_KEY}`,
-                        "anthropic-dangerous-direct-browser-access": "true",
+                        "anthropic-dangerous-direct-browser-access": "true"
                     };
                     break;
+                default:
+                    break;
             }
-
 
             if (!API_KEY) {
                 chats[currentChatIndex].messages.push({ role: 'error', content: 'You need to add an API key to use this tool. Please enter your key.' });
@@ -348,21 +349,32 @@
             }
 
             try {
+                let requestBody = {
+                    model: provider === "anthropic" ? "claude-3-5-sonnet-20240620" : model,
+                    max_tokens: 4096,
+                    messages: messages,
+
+                };
+
                 let response = await fetch(API_URL, {
                     method: "POST",
                     headers: headers,
-                    body: JSON.stringify({
-                        model: model,
-                        messages: messages
-                    }),
+                    body: JSON.stringify(requestBody),
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    return {
-                        content: data.choices[0].message.content,
-                        role: 'assistant'
-                    };
+                    if (provider === "anthropic") {
+                        return {
+                            content: data.content[0].text,
+                            role: 'assistant'
+                        };
+                    } else {
+                        return {
+                            content: data.choices[0].message.content,
+                            role: 'assistant'
+                        };
+                    }
                 } else {
                     throw new Error('API request failed');
                 }
