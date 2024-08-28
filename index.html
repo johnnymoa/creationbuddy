@@ -211,7 +211,7 @@
         }
 
         function loadChat(index) {
-            clearIframe ();
+            clearIframe();
             currentChatIndex = index;
             chatAreaElement.innerHTML = chats[index].messages.map(msg => {
                 const formattedContent = formatMessage(msg.content);
@@ -412,25 +412,25 @@
 
         }
 
-        function clearIframe () {
+        function clearIframe() {
             let newIframe = document.createElement('iframe');
-                newIframe.id = iframe.id;
-                newIframe.width = iframe.width;
-                newIframe.height = iframe.height;
-                newIframe.className = iframe.className;
-                Array.from(iframe.attributes).forEach(attr => {
-                    if (attr.name !== 'id') {
-                        newIframe.setAttribute(attr.name, attr.value);
-                    }
-                });
-                newIframe.style.cssText = iframe.style.cssText;
-                iframe.parentNode.replaceChild(newIframe, iframe);
-                iframe = newIframe;
+            newIframe.id = iframe.id;
+            newIframe.width = iframe.width;
+            newIframe.height = iframe.height;
+            newIframe.className = iframe.className;
+            Array.from(iframe.attributes).forEach(attr => {
+                if (attr.name !== 'id') {
+                    newIframe.setAttribute(attr.name, attr.value);
+                }
+            });
+            newIframe.style.cssText = iframe.style.cssText;
+            iframe.parentNode.replaceChild(newIframe, iframe);
+            iframe = newIframe;
         }
         function runHtml(uniqueId) {
             const codeElement = document.querySelector(`#${uniqueId} code`);
             if (codeElement.dataset.html) {
-                clearIframe ();
+                clearIframe();
                 iframe.contentDocument.open();
                 iframe.contentDocument.write(codeElement.textContent);
                 iframe.contentDocument.close();
@@ -524,6 +524,11 @@
             const modelSelect = document.getElementById('model');
             modelSelect.value = savedModel;
             modelSelect.dispatchEvent(new Event('change'));
+            provider = document.getElementById('model').selectedOptions[0].getAttribute('provider');
+            const savedApiKey = localStorage.getItem(provider + '_apikey');
+            if (savedApiKey) {
+                apiKeyInput.value = savedApiKey;
+            }
         }
 
         modelSelect.addEventListener('change', () => {
