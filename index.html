@@ -211,6 +211,7 @@
         }
 
         function loadChat(index) {
+            clearIframe ();
             currentChatIndex = index;
             chatAreaElement.innerHTML = chats[index].messages.map(msg => {
                 const formattedContent = formatMessage(msg.content);
@@ -411,11 +412,8 @@
 
         }
 
-        function runHtml(uniqueId) {
-            const codeElement = document.querySelector(`#${uniqueId} code`);
-            if (codeElement.dataset.html) {
-
-                let newIframe = document.createElement('iframe');
+        function clearIframe () {
+            let newIframe = document.createElement('iframe');
                 newIframe.id = iframe.id;
                 newIframe.width = iframe.width;
                 newIframe.height = iframe.height;
@@ -428,7 +426,11 @@
                 newIframe.style.cssText = iframe.style.cssText;
                 iframe.parentNode.replaceChild(newIframe, iframe);
                 iframe = newIframe;
-
+        }
+        function runHtml(uniqueId) {
+            const codeElement = document.querySelector(`#${uniqueId} code`);
+            if (codeElement.dataset.html) {
+                clearIframe ();
                 iframe.contentDocument.open();
                 iframe.contentDocument.write(codeElement.textContent);
                 iframe.contentDocument.close();
