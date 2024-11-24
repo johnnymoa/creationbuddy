@@ -326,9 +326,16 @@
                 "Authorization": `Bearer ${API_KEY}`
             };
 
+            let requestBody = {
+                    model: model,
+                    messages: messages
+                };
+
             switch (provider) {
                 case "openai":
                     API_URL = "https://api.openai.com/v1/chat/completions";
+                    if(model=='o1-preview')messages[0].role='user';
+                    if(model=='o1-mini')messages[0].role='user';
                     break;
                 case "mistral":
                     API_URL = "https://api.mistral.ai/v1/chat/completions";
@@ -337,6 +344,7 @@
                     API_URL = "https://api.groq.com/openai/v1/chat/completions";
                     break;
                 case "anthropic":
+                    requestBody.max_tokens = 4096;
                     messages[0].role = "user";
                     messages.splice(1, 0, { role: "assistant", content: "OK" });
                     API_URL = "https://api.anthropic.com/v1/messages";
@@ -359,12 +367,7 @@
             }
 
             try {
-                let requestBody = {
-                    model: provider === "anthropic" ? "claude-3-5-sonnet-20240620" : model,
-                    max_tokens: 4096,
-                    messages: messages,
-
-                };
+                
 
                 let response = await fetch(API_URL, {
                     method: "POST",
