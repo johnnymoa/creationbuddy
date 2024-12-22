@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="/style.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-D65KYL9C6V"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-D65KYL9C6V');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-D65KYL9C6V');
     </script>
 </head>
 
@@ -29,7 +29,7 @@
                     <option provider="openai" value="o1">ChatGPT o1</option>
                     <option provider="openai" value="o1-preview">ChatGPT o1 preview</option>
                     <option provider="openai" value="o1-mini">ChatGPT o1 mini</option>
-                    
+
                     <option provider="anthropic" value="claude-3-5-sonnet-20240620">Claude 3.5 sonnet</option>
                     <option provider="anthropic" value="claude-3-opus-20240229">Claude 3 opus</option>
                     <option provider="anthropic" value="claude-3-haiku-20240307">Claude 3 haiku</option>
@@ -182,24 +182,46 @@
         function formatMessage(content) {
             const tripleBacktickCount = (content.match(/\n```/g) || []).length;
             if (tripleBacktickCount % 2 !== 0) {
-                content += "\n```"
+                content += "\n```";
             }
-            const codeBlockRegex = /^```(\w+)\s*\n([\s\S]*?)^```\s*$/gm;
-            let index = 0;
-            return content.replace(codeBlockRegex, (match, language, code) => {
+
+            const codeBlockRegex = /^```(\w+)?\s*\n([\s\S]*?)^```\s*$/gm;
+
+            // Array to hold processed segments
+            let segments = [];
+            let lastIndex = 0;
+
+            content.replace(codeBlockRegex, (match, language, code, offset) => {
+                // Escape content before the code block
+                if (offset > lastIndex) {
+                    segments.push(escapeHtml(content.slice(lastIndex, offset)));
+                }
+
+                // Process the code block
                 const escapedCode = escapeHtml(code.trim());
                 const isHtml = language === 'html';
                 const uniqueId = `creation-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
                 const buttons = `<div class="code-buttons">
-                    <p style="flex-grow:1;padding-left:10px;margin:unset;">${language}</p>
-                    <button id="btnCollapse_${uniqueId}" onclick="toggleCollapse('${uniqueId}')">${isHtml ? 'Show' : 'Hide'}</button>
-                    <button onclick="copyToClipboard('${uniqueId}')">Copy</button>
-                    ${isHtml ? `<button onclick="downloadHtml('${uniqueId}')">Download</button>` : ''}
-                    ${isHtml ? `<button class="run-button" onclick="runHtml('${uniqueId}')">Run</button>` : ''}
-                </div>`;
-                return `<pre id="${uniqueId}" class="${isHtml ? 'collapsed' : ''}"><code ${isHtml ? 'data-html="true"' : ''}>${escapedCode}</code>${buttons}</pre>`;
+            <p style="flex-grow:1;padding-left:10px;margin:unset;">${language || 'code'}</p>
+            <button id="btnCollapse_${uniqueId}" onclick="toggleCollapse('${uniqueId}')">${isHtml ? 'Show' : 'Hide'}</button>
+            <button onclick="copyToClipboard('${uniqueId}')">Copy</button>
+            ${isHtml ? `<button onclick="downloadHtml('${uniqueId}')">Download</button>` : ''}
+            ${isHtml ? `<button class="run-button" onclick="runHtml('${uniqueId}')">Run</button>` : ''}
+        </div>`;
+                segments.push(`<pre id="${uniqueId}" class="${isHtml ? 'collapsed' : ''}"><code ${isHtml ? 'data-html="true"' : ''}>${escapedCode}</code>${buttons}</pre>`);
+
+                lastIndex = offset + match.length;
             });
+
+            // Escape remaining content after the last code block
+            if (lastIndex < content.length) {
+                segments.push(escapeHtml(content.slice(lastIndex)));
+            }
+
+            // Join all segments together
+            return segments.join('');
         }
+
 
         function startOverFrom(index, uniqueId) {
             // Display a confirmation prompt to the user
@@ -328,16 +350,16 @@
             };
 
             let requestBody = {
-                    model: model,
-                    messages: messages
-                };
+                model: model,
+                messages: messages
+            };
 
             switch (provider) {
                 case "openai":
                     API_URL = "https://api.openai.com/v1/chat/completions";
-                    if(model=='o1-preview')messages[0].role='user';
-                    if(model=='o1')messages[0].role='user';
-                    if(model=='o1-mini')messages[0].role='user';
+                    if (model == 'o1-preview') messages[0].role = 'user';
+                    if (model == 'o1') messages[0].role = 'user';
+                    if (model == 'o1-mini') messages[0].role = 'user';
                     break;
                 case "mistral":
                     API_URL = "https://api.mistral.ai/v1/chat/completions";
@@ -369,7 +391,7 @@
             }
 
             try {
-                
+
 
                 let response = await fetch(API_URL, {
                     method: "POST",
