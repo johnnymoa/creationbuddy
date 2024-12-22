@@ -27,6 +27,7 @@
                     <option provider="openai" value="gpt-4o">ChatGPT 4o</option>
                     <option provider="openai" value="gpt-4o-mini">ChatGPT 4o mini</option>
                     <option provider="openai" value="o1">ChatGPT o1</option>
+                    <option provider="openai" value="o1-preview">ChatGPT o1 preview</option>
                     <option provider="openai" value="o1-mini">ChatGPT o1 mini</option>
                     
                     <option provider="anthropic" value="claude-3-5-sonnet-20240620">Claude 3.5 sonnet</option>
@@ -335,6 +336,7 @@
                 case "openai":
                     API_URL = "https://api.openai.com/v1/chat/completions";
                     if(model=='o1-preview')messages[0].role='user';
+                    if(model=='o1')messages[0].role='user';
                     if(model=='o1-mini')messages[0].role='user';
                     break;
                 case "mistral":
