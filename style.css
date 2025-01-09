@@ -1,6 +1,6 @@
 * {
     scrollbar-width: thin;
-    scrollbar-color: #55555530 #f1f1f1;
+    scrollbar-color: #A7C7E7 #E8F0F8;
 }
 
 /* For Internet Explorer and Edge */
@@ -26,17 +26,17 @@ button {
 }
 
 button {
-    background-color: rgb(206, 206, 206);
+    background-color: #A7C7E7;
 }
 
 button:hover {
-    background-color: rgb(156, 156, 156);
+    background-color: #89B2E0;
 }
 
 .sidebar {
     min-width: 240px;
     width: 240px;
-    background-color: #f4f4f4;
+    background-color: #E8F0F8;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -73,7 +73,7 @@ button:hover {
 }
 
 .chat-list li:hover {
-    background-color: #e0e0e0;
+    background-color: #D1E2F2;
 }
 
 .chat-list .title {
@@ -96,29 +96,30 @@ button:hover {
 }
 
 .delete-btn {
-    color: black;
+    color: #89B2E0;
 }
+
 .delete-btn:hover,.rename-btn:hover {
- background-color: unset;
- color: #717171;
+    background-color: unset;
+    color: #6B8EB3;
 }
 
 .rename-btn {
-    color: black;
+    color: #89B2E0;
     transform: rotate(-241deg);
 }
 
 .chat-area {
     flex-grow: 1;
     overflow-y: auto;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #A7C7E7;
     padding: 10px;
     white-space: pre-wrap;
 }
 
 .input-area {
     display: flex;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #A7C7E7;
 }
 
 .input-area {
@@ -127,9 +128,9 @@ button:hover {
 }
 
 .spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
+    border: 4px solid rgba(167, 199, 231, 0.2);
     border-radius: 50%;
-    border-top: 4px solid #000;
+    border-top: 4px solid #A7C7E7;
     width: 24px;
     height: 24px;
     animation: spin 1s linear infinite;
@@ -155,7 +156,7 @@ button:hover {
 
 .resizer {
     width: 12px;
-    background-color: #ccc;
+    background-color: #A7C7E7;
     cursor: ew-resize;
     position: relative;
     order: 2;
@@ -169,12 +170,12 @@ button:hover {
     transform: translate(-50%, -50%);
     width: 100%;
     height: 64px;
-    background-color: #b0b0b0;
+    background-color: #89B2E0;
     transition: background-color 0.3s ease;
 }
 
 .resizer:hover::before {
-    background-color: #a0a0a0;
+    background-color: #6B8EB3;
 }
 
 .resizer::after {
@@ -186,12 +187,12 @@ button:hover {
     width: 12px;
     height: 24px;
     background-image:
-        radial-gradient(circle, #808080 2px, transparent 2px),
-        radial-gradient(circle, #808080 2px, transparent 2px),
-        radial-gradient(circle, #808080 2px, transparent 2px),
-        radial-gradient(circle, #808080 2px, transparent 2px),
-        radial-gradient(circle, #808080 2px, transparent 2px),
-        radial-gradient(circle, #808080 2px, transparent 2px);
+        radial-gradient(circle, #E8F0F8 2px, transparent 2px),
+        radial-gradient(circle, #E8F0F8 2px, transparent 2px),
+        radial-gradient(circle, #E8F0F8 2px, transparent 2px),
+        radial-gradient(circle, #E8F0F8 2px, transparent 2px),
+        radial-gradient(circle, #E8F0F8 2px, transparent 2px),
+        radial-gradient(circle, #E8F0F8 2px, transparent 2px);
     background-size: 12px 8px;
     background-position:
         0 0, 8px 0,
@@ -205,9 +206,8 @@ button:hover {
 }
 
 .resizer:active::before {
-    background-color: #909090;
+    background-color: #6B8EB3;
 }
-
 
 .controls {
     display: flex;
@@ -220,8 +220,8 @@ button:hover {
 }
 
 pre {
-    background-color: #f4f4f4;
-    border: 1px solid #ddd;
+    background-color: #E8F0F8;
+    border: 1px solid #A7C7E7;
     border-radius: 4px;
     padding: 10px;
     white-space: pre-wrap;
@@ -260,11 +260,11 @@ code {
     padding: 2px 5px;
     font-size: 12px;
     cursor: pointer;
-    border: 1px solid #ccc;
+    border: 1px solid #A7C7E7;
     border-radius: 4px;
-    background-color: #fff;
+    background-color: #E8F0F8;
 }
 
 .code-buttons button:hover {
-    background-color: #e0e0e0;
+    background-color: #D1E2F2;
 }
