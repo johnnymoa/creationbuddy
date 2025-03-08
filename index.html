@@ -252,6 +252,7 @@
             }).join('');
             //document.querySelectorAll('.run-button').length && document.querySelectorAll('.run-button')[document.querySelectorAll('.run-button').length - 1].click();
             loadSelectedSystemPrompt();
+            chatAreaElement.scrollTop = chatAreaElement.scrollHeight; // Scroll to bottom of chat area
         }
 
         function addNewChat() {
