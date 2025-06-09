@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creation Buddy</title>
     <link rel="stylesheet" href="/style.css">
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-D65KYL9C6V"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -16,590 +17,88 @@
 </head>
 
 <body>
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
+
     <div class="sidebar">
-        <div>
-            <p style="font-weight: bold;">creation buddy <small style="font-size: 10px;">by <a
-                        style="text-decoration: none; color: black;" href="https://johnnym.dev"
-                        target="_blank">johnnym.dev</a></small></p>
-            <div class="controls">
-                <label><small>Model:</small></label>
-                <select id="model">
-                    <option provider="openai" value="gpt-4o">ChatGPT 4o</option>
-                    <option provider="openai" value="gpt-4o-mini">ChatGPT 4o mini</option>
-                    <option provider="openai" value="o1">ChatGPT o1</option>
-                    <option provider="openai" value="o1-preview">ChatGPT o1 preview</option>
-                    <option provider="openai" value="o1-mini">ChatGPT o1 mini</option>
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">Creation Buddy</h1>
+            <p class="sidebar-subtitle">by <a href="https://johnnym.dev" target="_blank">johnnym.dev</a></p>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="controls-section">
+                <div class="controls">
+                    <div class="control-group">
+                        <label class="control-label">Model</label>
+                        <select id="model">
+                            <option provider="mistral" value="mistral-medium-latest">Mistral Medium</option>
+                            <option provider="mistral" value="mistral-large-latest">Mistral Large</option>
+                            <option provider="mistral" value="mistral-small-latest">Mistral Small</option>
+                            <option provider="mistral" value="codestral-latest">Mistral Codestral</option>
+                            <option provider="mistral" value="devstral-small-latest">Mistral Devstral</option>
 
-                    <option provider="anthropic" value="claude-3-5-sonnet-20240620">Claude 3.5 sonnet</option>
-                    <option provider="anthropic" value="claude-3-opus-20240229">Claude 3 opus</option>
-                    <option provider="anthropic" value="claude-3-haiku-20240307">Claude 3 haiku</option>
-                    <option provider="mistral" value="codestral-latest">Mistral Codestral</option>
-                    <option provider="mistral" value="mistral-large-latest">Mistral Large</option>
-                    <option provider="groq" value="llama-3.1-70b-versatile">Groq Hosted Meta Lama 3.1 70B</option>
+                            <option provider="openai" value="gpt-4o">ChatGPT 4o</option>
+                            <option provider="openai" value="gpt-4o-mini">ChatGPT 4o mini</option>
+                            <option provider="openai" value="o1">ChatGPT o1</option>
+                            <option provider="openai" value="o1-preview">ChatGPT o1 preview</option>
+                            <option provider="openai" value="o1-mini">ChatGPT o1 mini</option>
 
-                </select>
-                <input type="text" id="apikey" placeholder="Enter API Key">
-            </div>
-            <div class="controls">
-                <label><small>Chat:</small></label>
-                <select style="width: 100%;" id="system-prompt-select"></select>
-                <select style="width: 100%;" id="memory-mode-select">
-                    <option value="last">Remember Only Last Respone</option>
-                    <option value="everything">Remember Everything</option>
-                </select>
-                <button id="delete-all-btn">Delete All</button>
-                <div style="display: flex; justify-content: space-between;margin-bottom: unset;">
-                    <button style="width: 49%;" id="export-all-btn">Export</button>
-                    <button style="width: 49%;" id="import-all-btn">Import</button>
+                            <option provider="anthropic" value="claude-3-5-sonnet-20240620">Claude 3.5 sonnet</option>
+                            <option provider="anthropic" value="claude-3-opus-20240229">Claude 3 opus</option>
+                            <option provider="anthropic" value="claude-3-haiku-20240307">Claude 3 haiku</option>
+                       
+                            <option provider="groq" value="llama-3.1-70b-versatile">Groq Hosted Meta Lama 3.1 70B</option>
+                        </select>
+                        <input type="text" id="apikey" placeholder="Enter API Key">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Chat Settings</label>
+                        <select id="system-prompt-select"></select>
+                        <select id="memory-mode-select">
+                            <option value="last">Remember Only Last Response</option>
+                            <option value="everything">Remember Everything</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Actions</label>
+                        <button id="new-chat-btn">New Chat</button>
+                        <div class="control-row">
+                            <button id="export-all-btn" class="secondary">Export</button>
+                            <button id="import-all-btn" class="secondary">Import</button>
+                        </div>
+                        <button id="delete-all-btn" class="danger">Delete All</button>
+                        <input type="file" id="import-all-input" style="display:none;">
+                    </div>
                 </div>
-                <input type="file" id="import-all-input" style="display:none;">
-                <button id="new-chat-btn">New Chat</button>
+            </div>
+            
+            <div class="chat-list-container">
+                <ul class="chat-list" id="chat-list"></ul>
             </div>
         </div>
-        <ul class="chat-list" id="chat-list"></ul>
     </div>
+    
     <div class="main" id="main-chat" style="width: calc(100% - 60%);">
         <div class="chat-area" id="chat-area"></div>
         <div class="input-area">
-            <textarea id="chat-input" rows="2" placeholder="Type your prompts here..."></textarea>
-            <button id="send-btn" style="height: 100%;">Send</button>
-            <div id="spinner" class="spinner" style="display:none;"></div>
+            <textarea id="chat-input" rows="2" placeholder="Type your message here..."></textarea>
+            <button id="send-btn" class="send-button">
+                <span class="send-text">Send</span>
+                <span class="send-icon">→</span>
+            </button>
         </div>
     </div>
+    
     <div class="resizer" id="resizer"></div>
+    
     <div class="iframe-container" id="iframe-container">
         <iframe id="genai-iframe" width="100%" height="100%"></iframe>
     </div>
 
-    <script>
-        const chatListElement = document.getElementById('chat-list');
-        const chatAreaElement = document.getElementById('chat-area');
-        const chatInputElement = document.getElementById('chat-input');
-        const newChatButton = document.getElementById('new-chat-btn');
-        const sendButton = document.getElementById('send-btn');
-        const deleteAllButton = document.getElementById('delete-all-btn');
-        const exportAllButton = document.getElementById('export-all-btn');
-        const importAllButton = document.getElementById('import-all-btn');
-        const importAllInput = document.getElementById('import-all-input');
-        let iframe = document.getElementById('genai-iframe');
-        const resizer = document.getElementById('resizer');
-        const mainChat = document.getElementById('main-chat');
-        const iframeContainer = document.getElementById('iframe-container');
-        const apiKeyInput = document.getElementById('apikey');
-        const modelSelect = document.getElementById('model');
-        const systemPromptSelect = document.getElementById('system-prompt-select');
-        const memoryModeSelect = document.getElementById('memory-mode-select');
-
-
-
-        let provider = document.getElementById('model').selectedOptions[0].getAttribute('provider');
-        let chats = JSON.parse(localStorage.getItem('chats')) || [];
-        let systemPrompts = [];
-        let currentChatIndex = 0;
-        let editingPromptIndex = null;
-
-        // Function to load prompt content from the server
-        async function loadPromptContent(name) {
-            const response = await fetch(`/prompts/${name}.txt`);
-            if (response.ok) {
-                return await response.text();
-            } else {
-                console.error(`Failed to load content for ${name}`);
-                return '';
-            }
-        }
-
-        // Function to load default system prompts and merge them with stored prompts
-        async function initializeSystemPrompts() {
-            systemPrompts = [
-                { name: 'Make WebApps', content: '' },
-                { name: 'Just Chat', content: '' },
-                { name: 'Use P5js', content: '' },
-                { name: 'Use Mermaid diagrams', content: '' }
-            ];
-            for (let prompt of systemPrompts) {
-                prompt.content = await loadPromptContent(prompt.name);
-            }
-            systemPromptSelect.innerHTML = '';
-            systemPrompts.forEach((prompt, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = prompt.name;
-                systemPromptSelect.appendChild(option);
-            });
-            loadSelectedSystemPrompt();
-        }
-        initializeSystemPrompts();
-
-        function renderChatList() {
-            chatListElement.innerHTML = '';
-            chats.forEach((chat, index) => {
-                const chatName = chat.name || 'New chat';
-                const li = document.createElement('li');
-
-                const titleSpan = document.createElement('span');
-                titleSpan.textContent = chatName;
-                titleSpan.classList.add('title');
-                li.appendChild(titleSpan);
-
-                const renameBtn = document.createElement('button');
-                renameBtn.textContent = '✏';
-                renameBtn.classList.add('rename-btn');
-                renameBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const newName = prompt('Enter new chat name:', chatName);
-                    if (newName !== null) {
-                        renameChat(index, newName);
-                    }
-                });
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'x';
-                deleteBtn.classList.add('delete-btn');
-                deleteBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    if (confirm('Are you sure you want to delete this chat?')) {
-                        deleteChat(index);
-                    }
-                });
-
-                li.appendChild(renameBtn);
-                li.appendChild(deleteBtn);
-                li.addEventListener('click', () => loadChat(index));
-                chatListElement.appendChild(li);
-            });
-        }
-
-        function escapeHtml(unsafe) {
-            return unsafe
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-
-        function formatMessage(content) {
-            const tripleBacktickCount = (content.match(/\n```/g) || []).length;
-            if (tripleBacktickCount % 2 !== 0) {
-                content += "\n```";
-            }
-
-            const codeBlockRegex = /^```(\w+)?\s*\n([\s\S]*?)^```\s*$/gm;
-
-            // Array to hold processed segments
-            let segments = [];
-            let lastIndex = 0;
-
-            content.replace(codeBlockRegex, (match, language, code, offset) => {
-                // Escape content before the code block
-                if (offset > lastIndex) {
-                    segments.push(escapeHtml(content.slice(lastIndex, offset)));
-                }
-
-                // Process the code block
-                const escapedCode = escapeHtml(code.trim());
-                const isHtml = language === 'html';
-                const uniqueId = `creation-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-                const buttons = `<div class="code-buttons">
-            <p style="flex-grow:1;padding-left:10px;margin:unset;">${language || 'code'}</p>
-            <button id="btnCollapse_${uniqueId}" onclick="toggleCollapse('${uniqueId}')">${isHtml ? 'Show' : 'Hide'}</button>
-            <button onclick="copyToClipboard('${uniqueId}')">Copy</button>
-            ${isHtml ? `<button onclick="downloadHtml('${uniqueId}')">Download</button>` : ''}
-            ${isHtml ? `<button class="run-button" onclick="runHtml('${uniqueId}')">Run</button>` : ''}
-        </div>`;
-                segments.push(`<pre id="${uniqueId}" class="${isHtml ? 'collapsed' : ''}"><code ${isHtml ? 'data-html="true"' : ''}>${escapedCode}</code>${buttons}</pre>`);
-
-                lastIndex = offset + match.length;
-            });
-
-            // Escape remaining content after the last code block
-            if (lastIndex < content.length) {
-                segments.push(escapeHtml(content.slice(lastIndex)));
-            }
-
-            // Join all segments together
-            return segments.join('');
-        }
-
-
-        function startOverFrom(index, uniqueId) {
-            // Display a confirmation prompt to the user
-            let confirmation = confirm("Are you sure you want to delete this prompt and all following messages? There is no going back from this.");
-
-            // Proceed only if the user confirms the action
-            if (confirmation) {
-                // Find the index of the message with the specified uniqueId
-                let messageIndex = chats[index].messages.findIndex(message => message.uniqueId === uniqueId);
-
-                // If the message is found, remove it and all following messages
-                if (messageIndex !== -1) {
-                    chats[index].messages.splice(messageIndex);
-                    saveChats();
-                    loadChat(index);
-                } else {
-                    console.error("Message with the specified uniqueId not found.");
-                }
-            }
-        }
-
-        function loadChat(index) {
-            clearIframe();
-            currentChatIndex = index;
-            chatAreaElement.innerHTML = chats[index].messages.map(msg => {
-                const formattedContent = formatMessage(msg.content);
-                return `<div style ="margin-top:8px">${msg.role === 'user' ? `<div style="width:100%;text-align:center;margin-bottom:5px;"><button style='border-radius:4px' onclick="startOverFrom(${index},'${msg.uniqueId}')" >Start over here?</button></div><hr style="border: 0; border-top: 1px dashed #ccc; height: 1px;">` : ''}<strong>${msg.role === 'user' ? 'You' : 'Buddy'}:</strong> ${formattedContent}</div>`;
-            }).join('');
-            //document.querySelectorAll('.run-button').length && document.querySelectorAll('.run-button')[document.querySelectorAll('.run-button').length - 1].click();
-            loadSelectedSystemPrompt();
-            chatAreaElement.scrollTop = chatAreaElement.scrollHeight; // Scroll to bottom of chat area
-        }
-
-        function addNewChat() {
-            chats.push({ name: '', messages: [], selectedPromptIndex: systemPromptSelect.value });
-            saveChats();
-            renderChatList();
-            loadChat(chats.length - 1);
-        }
-
-        function deleteChat(index) {
-            chats.splice(index, 1);
-            saveChats();
-            renderChatList();
-            if (chats.length > 0) {
-                loadChat(0);
-            } else {
-                chatAreaElement.innerHTML = '';
-                addNewChat();
-            }
-        }
-
-        function renameChat(index, newName) {
-            chats[index].name = newName;
-            saveChats();
-            renderChatList();
-        }
-
-        function saveChats() {
-            localStorage.setItem('chats', JSON.stringify(chats));
-        }
-
-        function saveSelectedSystemPrompt() {
-            chats[currentChatIndex].selectedPromptIndex = systemPromptSelect.value;
-            saveChats();
-        }
-
-        function loadSelectedSystemPrompt() {
-            const selectedPromptIndex = chats[currentChatIndex]?.selectedPromptIndex || 0;
-            systemPromptSelect.value = selectedPromptIndex;
-        }
-
-        let awaitingResponse = false;
-        async function sendMessage() {
-            const message = escapeHtml(chatInputElement.value);
-            if (message.trim() === '') return;
-
-            // Hide the send button and show the spinner
-            sendButton.style.display = 'none';
-            document.getElementById('spinner').style.display = 'block';
-            awaitingResponse = true;
-
-
-            chats[currentChatIndex].messages.push({ role: 'user', content: message, uniqueId: `prompt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` });
-            saveChats();
-            loadChat(currentChatIndex);
-            chatInputElement.value = '';
-
-            const systemPromptIndex = systemPromptSelect.value;
-            const systemPrompt = systemPrompts[systemPromptIndex]?.content || "You are a helpful assistant.";
-
-            let messagesToSend = JSON.parse(JSON.stringify([{ role: "system", content: systemPrompt }, ...chats[currentChatIndex].messages]));
-            messagesToSend = messagesToSend.filter(message => message.role !== 'error');
-            messagesToSend = messagesToSend.map(message => (delete message.uniqueId, message));
-
-
-            if (memoryModeSelect.value == "last") {
-                if (messagesToSend.length > 3) {
-                    messagesToSend = [
-                        messagesToSend[0],
-                        ...messagesToSend.slice(-3)
-                    ];
-                }
-            }
-
-
-            const responseMessage = await getCompletion(messagesToSend, modelSelect.value);
-            if (responseMessage) {
-                chats[currentChatIndex].messages.push(responseMessage);
-                saveChats();
-                loadChat(currentChatIndex);
-            }
-
-            // Revert the spinner back to the send button
-            sendButton.style.display = 'block';
-            document.getElementById('spinner').style.display = 'none';
-            awaitingResponse = false;
-
-        }
-
-        async function getCompletion(messages, model) {
-            let API_URL = "";
-            let API_KEY = apiKeyInput.value;
-            let headers = {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_KEY}`
-            };
-
-            let requestBody = {
-                model: model,
-                messages: messages
-            };
-
-            switch (provider) {
-                case "openai":
-                    API_URL = "https://api.openai.com/v1/chat/completions";
-                    if (model == 'o1-preview') messages[0].role = 'user';
-                    if (model == 'o1') messages[0].role = 'user';
-                    if (model == 'o1-mini') messages[0].role = 'user';
-                    break;
-                case "mistral":
-                    API_URL = "https://api.mistral.ai/v1/chat/completions";
-                    break;
-                case "groq":
-                    API_URL = "https://api.groq.com/openai/v1/chat/completions";
-                    break;
-                case "anthropic":
-                    requestBody.max_tokens = 4096;
-                    messages[0].role = "user";
-                    messages.splice(1, 0, { role: "assistant", content: "OK" });
-                    API_URL = "https://api.anthropic.com/v1/messages";
-                    headers = {
-                        "Content-Type": "application/json",
-                        "anthropic-version": "2023-06-01",
-                        "x-api-key": `${API_KEY}`,
-                        "anthropic-dangerous-direct-browser-access": "true"
-                    };
-                    break;
-                default:
-                    break;
-            }
-
-            if (!API_KEY) {
-                chats[currentChatIndex].messages.push({ role: 'error', content: 'You need to add an API key to use this tool. Please enter your key.' });
-                saveChats();
-                loadChat(currentChatIndex);
-                return null;
-            }
-
-            try {
-
-
-                let response = await fetch(API_URL, {
-                    method: "POST",
-                    headers: headers,
-                    body: JSON.stringify(requestBody),
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    if (provider === "anthropic") {
-                        return {
-                            content: data.content[0].text,
-                            role: 'assistant'
-                        };
-                    } else {
-                        return {
-                            content: data.choices[0].message.content,
-                            role: 'assistant'
-                        };
-                    }
-                } else {
-                    throw new Error('API request failed');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                chats[currentChatIndex].messages.push({ role: 'error', content: 'Request failed. Please make sure you provided a valid API key with enough balance and have a working internet connection.' });
-                saveChats();
-                loadChat(currentChatIndex);
-                return null;
-            }
-        }
-
-        function copyToClipboard(uniqueId) {
-            const codeElement = document.querySelector(`#${uniqueId} code`);
-            const textArea = document.createElement('textarea');
-            textArea.value = codeElement.textContent;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            alert('Copied to clipboard!');
-        }
-
-        function downloadHtml(uniqueId) {
-            const codeElement = document.querySelector(`#${uniqueId} code`);
-            if (codeElement.dataset.html) {
-                var file = new Blob([codeElement.textContent], { type: 'text/html' });
-                var fileURL = URL.createObjectURL(file);
-                var a = document.createElement("a");
-                a.href = fileURL;
-                a.download = uniqueId + ".html";
-                document.body.appendChild(a);
-                a.click();
-            }
-
-        }
-
-        function clearIframe() {
-            let newIframe = document.createElement('iframe');
-            newIframe.id = iframe.id;
-            newIframe.width = iframe.width;
-            newIframe.height = iframe.height;
-            newIframe.className = iframe.className;
-            Array.from(iframe.attributes).forEach(attr => {
-                if (attr.name !== 'id') {
-                    newIframe.setAttribute(attr.name, attr.value);
-                }
-            });
-            newIframe.style.cssText = iframe.style.cssText;
-            iframe.parentNode.replaceChild(newIframe, iframe);
-            iframe = newIframe;
-        }
-        function runHtml(uniqueId) {
-            const codeElement = document.querySelector(`#${uniqueId} code`);
-            if (codeElement.dataset.html) {
-                clearIframe();
-                iframe.contentDocument.open();
-                iframe.contentDocument.write(codeElement.textContent);
-                iframe.contentDocument.close();
-            }
-        }
-
-        function toggleCollapse(uniqueId) {
-            const preElement = document.getElementById(uniqueId);
-            if (preElement) {
-                preElement.classList.toggle('collapsed');
-                const button = document.getElementById("btnCollapse_" + uniqueId);
-                if (preElement.classList.contains('collapsed')) {
-                    button.textContent = 'Show';
-                } else {
-                    button.textContent = 'Hide';
-                }
-            }
-        }
-
-        function deleteAllChats() {
-            if (confirm('Are you sure you want to delete all chats?')) {
-                chats = [];
-                saveChats();
-                renderChatList();
-                chatAreaElement.innerHTML = '';
-                addNewChat();
-            }
-        }
-
-        function exportAllData() {
-            const data = {
-                chats
-            };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "app_data.json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-        }
-
-        function importAllData(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const data = JSON.parse(e.target.result);
-                    chats = data.chats || [];
-                    saveChats();
-                    renderChatList();
-                    if (chats.length > 0) {
-                        loadChat(0);
-                    }
-                };
-                reader.readAsText(file);
-            }
-        }
-
-        deleteAllButton.addEventListener('click', deleteAllChats);
-        exportAllButton.addEventListener('click', exportAllData);
-        importAllButton.addEventListener('click', () => importAllInput.click());
-        importAllInput.addEventListener('change', importAllData);
-        newChatButton.addEventListener('click', addNewChat);
-        sendButton.addEventListener('click', sendMessage);
-        chatInputElement.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey && !awaitingResponse) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-        systemPromptSelect.addEventListener('change', saveSelectedSystemPrompt);
-
-        let isResizing = false;
-
-        resizer.addEventListener('mousedown', (e) => {
-            isResizing = true;
-        });
-        document.addEventListener('mousemove', (e) => {
-            if (!isResizing) return;
-            let offsetRight = document.body.offsetWidth - (e.clientX);
-            mainChat.style.width = `calc(100% - ${offsetRight + 5}px)`;
-            iframeContainer.style.width = `${offsetRight}px`;
-        });
-        document.addEventListener('mouseup', () => {
-            isResizing = false;
-        });
-
-        const savedModel = localStorage.getItem('selectedModel');
-        if (savedModel) {
-            const modelSelect = document.getElementById('model');
-            modelSelect.value = savedModel;
-            modelSelect.dispatchEvent(new Event('change'));
-            provider = document.getElementById('model').selectedOptions[0].getAttribute('provider');
-            const savedApiKey = localStorage.getItem(provider + '_apikey');
-            if (savedApiKey) {
-                apiKeyInput.value = savedApiKey;
-            }
-        }
-
-        modelSelect.addEventListener('change', () => {
-            const selectedModel = modelSelect.value;
-            localStorage.setItem('selectedModel', selectedModel);
-
-            provider = document.getElementById('model').selectedOptions[0].getAttribute('provider');
-            const savedApiKey = localStorage.getItem(provider + '_apikey');
-            if (savedApiKey) {
-                apiKeyInput.value = savedApiKey;
-            } else {
-                apiKeyInput.value = '';
-            }
-        });
-
-
-        apiKeyInput.addEventListener('change', () => {
-            localStorage.setItem(provider + '_apikey', apiKeyInput.value);
-        });
-
-        const savedApiKey = localStorage.getItem(provider + '_apikey');
-        if (savedApiKey) {
-            apiKeyInput.value = savedApiKey;
-        }
-
-        renderChatList();
-
-        if (chats.length === 0) {
-            addNewChat();
-        } else {
-            loadChat(0);
-        }
-    </script>
+    <script src="main.js"></script>
 </body>
 
 </html>
