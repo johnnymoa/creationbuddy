@@ -25,7 +25,7 @@
             text-align: center;
         }
 
-        /* Console styles */
+        /* Console styles - Light Theme */
         .ide-preview-section {
             flex-direction: column;
         }
@@ -42,7 +42,7 @@
         }
         .ide-console-resizer {
             height: 5px;
-            background-color: #252526;
+            background-color: #e0e0e0; /* Light gray resizer */
             cursor: ns-resize;
             flex-shrink: 0;
         }
@@ -52,50 +52,73 @@
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
-            background-color: #1e1e1e;
+            background-color: #ffffff; /* White background */
+            color: #212529; /* Dark text */
         }
         .ide-console-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 4px 8px;
-            background-color: #2a2a2e;
-            border-top: 1px solid #333;
+            padding: 6px 10px;
+            background-color: #f7f7f7; /* Slightly off-white header */
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
             font-size: 13px;
             user-select: none;
+            font-weight: 500;
+            color: #333;
+        }
+         .ide-console-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ide-console-title .info-icon {
+            cursor: help;
+            color: #666;
         }
         .ide-console-header button {
             background: none;
             border: none;
-            color: #ccc;
+            color: #333; /* Dark icon color */
             cursor: pointer;
             padding: 2px;
             border-radius: 3px;
         }
         .ide-console-header button:hover {
-            background-color: #444;
+            background-color: #e0e0e0;
         }
         .ide-console-output {
             flex-grow: 1;
             font-family: Menlo, Monaco, 'Courier New', monospace;
             font-size: 13px;
-            color: #ccc;
-            padding: 8px;
+            color: #333; /* Dark text */
+            padding: 8px 10px;
             overflow-y: auto;
             white-space: pre-wrap;
             word-break: break-all;
         }
         .console-entry {
-            padding: 2px 0;
-            border-bottom: 1px solid #2a2a2e;
-            line-height: 1.4;
+            padding: 3px 0;
+            border-bottom: 1px solid #f0f0f0; /* Very light border */
+            line-height: 1.5;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+         .console-entry::before {
+            content: '>';
+            color: #999;
+            font-family: monospace;
+            line-height: 1.5;
         }
         .console-entry:last-child { border: none; }
-        .console-log { color: #ccc; }
-        .console-error { color: #f48771; }
-        .console-warn { color: #f3d999; }
-        .console-info { color: #75beff; }
-        .console-debug { color: #ae81ff; }
+        /* Log colors for light theme */
+        .console-log { color: #333; }
+        .console-error { color: #c00; }
+        .console-warn { color: #b45309; }
+        .console-info { color: #0550ae; }
+        .console-debug { color: #551a8b; }
     </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-D65KYL9C6V"></script>
@@ -220,7 +243,14 @@
                         <div class="ide-console-resizer" id="ide-console-resizer"></div>
                         <div class="ide-console-container" id="ide-console-container">
                             <div class="ide-console-header">
-                                <span>Console</span>
+                                <div class="ide-console-title">
+                                    <span>Live Logs</span>
+                                    <span class="info-icon" title="Displays messages, errors, and logs from the running code in the preview window.">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="14" height="14">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                        </svg>
+                                    </span>
+                                </div>
                                 <button id="clear-console-btn" title="Clear console">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
                                 </button>

@@ -651,45 +651,82 @@ button.danger:hover:not(:disabled) {
 }
 
 .message {
-    margin-bottom: var(--space-5);
-    animation: fadeInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: var(--space-4);
+    animation: fadeInUp 0.3s ease-out;
+    display: flex;
+    gap: var(--space-3);
 }
 
 .message.user {
-    display: flex;
     justify-content: flex-end;
 }
 
 .message.assistant {
-    display: block;
+    justify-content: flex-start;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.message-header {
+.message-bubble-wrapper {
+    max-width: 80%;
     display: flex;
-    align-items: flex-start;
-    gap: var(--space-3);
-    margin-bottom: var(--space-2);
+    flex-direction: column;
 }
 
-.message-inline {
-    display: flex;
+.message.user .message-bubble-wrapper {
+    align-items: flex-end;
+}
+
+.message.assistant .message-bubble-wrapper {
     align-items: flex-start;
-    gap: var(--space-3);
+}
+
+.message.user .message-content {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    word-wrap: break-word;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-primary);
+    text-align: left;
+}
+
+.message-header-content {
+    padding: 0 var(--space-2);
 }
 
 .message-body {
-    margin-left: calc(28px + var(--space-3)); /* Avatar width + gap */
+    padding-top: var(--space-2);
+}
+
+.message-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-1);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    margin-top: var(--space-2);
+    padding: 0 var(--space-1);
+    height: 0;
+    overflow: hidden;
+}
+
+.message:hover .message-actions {
+    opacity: 1;
+    visibility: visible;
+    height: 24px;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .message-avatar {
@@ -763,14 +800,7 @@ button.danger:hover:not(:disabled) {
     padding-top: 0;
 }
 
-.message.user .message-content {
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-primary);
-    border-radius: var(--radius-lg);
-    padding: var(--space-3) var(--space-4);
-    color: var(--text-primary);
-    max-width: 70%;
-}
+/* User message content styling is now handled in the main .message.user .message-content rule above */
 
 .message-content .typing-indicator {
     display: flex;
@@ -1457,3 +1487,127 @@ button.danger:hover:not(:disabled) {
 }
 
 .message-divider { display: none; }
+
+/* Message Action Buttons */
+.message-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-1);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    margin-top: var(--space-2);
+    padding: 0 var(--space-1);
+    height: 24px; /* Give it a fixed height to prevent layout shifts */
+}
+
+.message:hover .message-actions {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Action buttons now use relative positioning and appear below messages */
+
+.message-action-btn {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.message-action-btn:hover {
+    background: var(--bg-secondary);
+    border-color: var(--border-secondary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.message-action-btn svg {
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+}
+
+.message-action-btn:hover svg {
+    color: var(--text-primary);
+}
+
+/* Message Edit Interface */
+.message-edit-container {
+    margin-top: var(--space-3);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    backdrop-filter: blur(8px);
+    animation: fadeInUp 0.3s ease;
+}
+
+.message-edit-textarea {
+    width: 100%;
+    min-height: 80px;
+    max-height: 300px;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3);
+    resize: vertical;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: border-color 0.2s ease;
+}
+
+.message-edit-textarea:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.message-edit-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+}
+
+.message-edit-btn {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.message-edit-btn.primary {
+    background: var(--brand-primary);
+    color: var(--text-white);
+    border-color: var(--brand-primary);
+}
+
+.message-edit-btn.primary:hover {
+    background: var(--brand-primary-hover);
+    border-color: var(--brand-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.message-edit-btn.secondary {
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    border-color: var(--border-primary);
+}
+
+.message-edit-btn.secondary:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-secondary);
+}
