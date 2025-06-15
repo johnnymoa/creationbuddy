@@ -1179,6 +1179,71 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Resizer for IDE console
+const consoleResizer = document.getElementById('ide-console-resizer');
+const consoleContainer = document.getElementById('ide-console-container');
+const previewWrapper = document.querySelector('.preview-wrapper');
+
+const consoleResizerMoveHandler = (e) => {
+    e.preventDefault();
+    const ideContent = document.getElementById('ide-content');
+    const newHeight = ideContent.clientHeight - e.clientY + ideContent.offsetTop;
+    const minHeight = 40; // min height for console
+    const maxHeight = ideContent.clientHeight - 50; // min height for preview
+    
+    if (newHeight > minHeight && newHeight < maxHeight) {
+        consoleContainer.style.height = `${newHeight}px`;
+    }
+};
+
+const consoleResizerUpHandler = () => {
+    document.body.style.cursor = 'auto';
+    document.body.style.userSelect = 'auto';
+    if (iframe) {
+        iframe.style.pointerEvents = 'auto';
+    }
+
+    document.removeEventListener('mousemove', consoleResizerMoveHandler);
+    document.removeEventListener('mouseup', consoleResizerUpHandler);
+};
+
+consoleResizer.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    document.body.style.cursor = 'ns-resize';
+    document.body.style.userSelect = 'none';
+    if (iframe) {
+        iframe.style.pointerEvents = 'none';
+    }
+
+    document.addEventListener('mousemove', consoleResizerMoveHandler);
+    document.addEventListener('mouseup', consoleResizerUpHandler);
+});
+
+// Listen for messages from the iframe (for console logs)
+window.addEventListener('message', (event) => {
+    // We only accept messages from our own iframe
+    if (event.source !== iframe.contentWindow) return;
+
+    const data = event.data;
+
+    if (data.source === 'iframe-console') {
+        const consoleOutput = document.getElementById('ide-console-output');
+        if (consoleOutput) {
+            const logEntry = document.createElement('div');
+            logEntry.className = `console-entry console-${data.type || 'log'}`;
+            
+            const logMessage = document.createElement('span');
+            logMessage.textContent = data.message;
+            
+            logEntry.appendChild(logMessage);
+            consoleOutput.appendChild(logEntry);
+            
+            // Auto-scroll to bottom
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+    }
+});
+
 // Update line numbers
 function updateLineNumbers() {
     const codeEditor = document.getElementById('code-editor');
@@ -1280,12 +1345,17 @@ function switchView(view) {
     const previewSection = document.getElementById('ide-preview-section');
     const codeViewBtn = document.getElementById('code-view-btn');
     const previewViewBtn = document.getElementById('preview-view-btn');
+    const consoleContainer = document.getElementById('ide-console-container');
+    const consoleResizer = document.getElementById('ide-console-resizer');
     
     if (view === 'code') {
         codeSection.classList.add('active');
         previewSection.classList.remove('active');
         codeViewBtn.classList.add('active');
         previewViewBtn.classList.remove('active');
+        // Hide console in code view
+        consoleContainer.style.display = 'none';
+        consoleResizer.style.display = 'none';
     } else { // 'preview'
         // Only allow preview for HTML files
         if (codeBlocks[currentCodeId] && codeBlocks[currentCodeId].isHtml) {
@@ -1296,6 +1366,9 @@ function switchView(view) {
             previewSection.classList.add('active');
             codeViewBtn.classList.remove('active');
             previewViewBtn.classList.add('active');
+            // Show console in preview
+            consoleContainer.style.display = 'flex';
+            consoleResizer.style.display = 'block';
         }
     }
 }
@@ -1336,11 +1409,86 @@ function viewCode(codeId) {
 
 // Update live preview
 function updateLivePreview(htmlCode) {
-    const previewIframe = document.getElementById('preview-iframe');
-    if (previewIframe) {
-        previewIframe.contentDocument.open();
-        previewIframe.contentDocument.write(htmlCode);
-        previewIframe.contentDocument.close();
+    // By replacing the iframe, we ensure a completely fresh JS context.
+    // This function replaces the DOM node and updates the global 'iframe' variable.
+    clearIframe();
+    
+    // The global 'iframe' variable now points to the new, clean iframe.
+    if (iframe) {
+        // Clear the visual console output in the parent document
+        const consoleOutput = document.getElementById('ide-console-output');
+        if (consoleOutput) {
+            consoleOutput.innerHTML = '';
+        }
+
+        const consoleLoggerScript = `
+            <script>
+                (function() {
+                    if (window.consoleProxyAttached) return;
+                    window.consoleProxyAttached = true;
+                    
+                    const originalConsole = {};
+
+                    function formatArgs(args) {
+                        return args.map(arg => {
+                            if (arg instanceof Error) {
+                                return arg.stack || arg.message;
+                            }
+                            if (typeof arg === 'object' && arg !== null) {
+                                try {
+                                    return JSON.stringify(arg, null, 2);
+                                } catch (e) {
+                                    return '[Circular Object]';
+                                }
+                            }
+                            return String(arg);
+                        }).join(' ');
+                    }
+
+                    function postMessageToParent(type, message) {
+                        window.parent.postMessage({
+                            source: 'iframe-console',
+                            type: type,
+                            message: message
+                        }, '*');
+                    }
+
+                    ['log', 'warn', 'error', 'info', 'debug'].forEach(level => {
+                        if(console[level]) {
+                            originalConsole[level] = console[level];
+                            console[level] = (...args) => {
+                                originalConsole[level].apply(console, args);
+                                postMessageToParent(level, formatArgs(Array.from(args)));
+                            };
+                        }
+                    });
+                    
+                    window.addEventListener('error', function (e) {
+                       postMessageToParent('error', e.message);
+                    });
+
+                    window.addEventListener('unhandledrejection', event => {
+                        let reason = event.reason;
+                        if (reason && typeof reason === 'object' && reason.message) {
+                            reason = reason.message;
+                        }
+                        postMessageToParent('error', 'Unhandled promise rejection: ' + reason);
+                    });
+                })();
+            <\/script>
+        `;
+
+        // Inject the logger script into the head of the HTML content
+        if (htmlCode.includes('</head>')) {
+            htmlCode = htmlCode.replace('</head>', `${consoleLoggerScript}</head>`);
+        } else {
+            htmlCode = `${consoleLoggerScript}${htmlCode}`;
+        }
+        
+        // Write the content into the new iframe
+        iframe.contentDocument.open();
+        iframe.contentDocument.write(htmlCode);
+        iframe.contentDocument.close();
     }
 }
 
@@ -1502,6 +1650,14 @@ function downloadCurrentCode() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+// Clear console button
+document.getElementById('clear-console-btn').addEventListener('click', () => {
+    const consoleOutput = document.getElementById('ide-console-output');
+    if(consoleOutput) {
+        consoleOutput.innerHTML = '';
+    }
+});
 
 // Sidebar Toggle
 const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
