@@ -1,269 +1,180 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creation Buddy</title>
-    <link rel="stylesheet" href="/style.css">
-    
-    <style>
-        .message.system-edit {
-            background-color: #fef3c7;
-            border-left-color: #f59e0b;
-        }
-        .message.system-edit .message-header {
-            color: #b45309;
-        }
-        .message.system-edit .message-author {
-            font-weight: 500;
-        }
-        .message-avatar.system {
-            background-color: #6c757d;
-            font-size: 14px;
-            color: white;
-            text-align: center;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creation Buddy — Be Back Later</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #05010f;
+    display: flex; align-items: center; justify-content: center;
+    perspective: 900px;
+  }
+  canvas#fx { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 
-        /* Console styles - Light Theme */
-        .ide-preview-section {
-            flex-direction: column;
-        }
-        .preview-wrapper {
-            flex-grow: 1;
-            position: relative;
-            min-height: 50px;
-            display: flex;
-            flex-direction: column;
-        }
-        .preview-wrapper > .preview-iframe {
-            flex-grow: 1;
-            border: none;
-        }
-        .ide-console-resizer {
-            height: 5px;
-            background-color: #e0e0e0; /* Light gray resizer */
-            cursor: ns-resize;
-            flex-shrink: 0;
-        }
-        .ide-console-container {
-            height: 150px;
-            min-height: 40px;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-            background-color: #ffffff; /* White background */
-            color: #212529; /* Dark text */
-        }
-        .ide-console-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 10px;
-            background-color: #f7f7f7; /* Slightly off-white header */
-            border-top: 1px solid #e0e0e0;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 13px;
-            user-select: none;
-            font-weight: 500;
-            color: #333;
-        }
-         .ide-console-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .ide-console-title .info-icon {
-            cursor: help;
-            color: #666;
-        }
-        .ide-console-header button {
-            background: none;
-            border: none;
-            color: #333; /* Dark icon color */
-            cursor: pointer;
-            padding: 2px;
-            border-radius: 3px;
-        }
-        .ide-console-header button:hover {
-            background-color: #e0e0e0;
-        }
-        .ide-console-output {
-            flex-grow: 1;
-            font-family: Menlo, Monaco, 'Courier New', monospace;
-            font-size: 13px;
-            color: #333; /* Dark text */
-            padding: 8px 10px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-        .console-entry {
-            padding: 3px 0;
-            border-bottom: 1px solid #f0f0f0; /* Very light border */
-            line-height: 1.5;
-            display: flex;
-            gap: 8px;
-            align-items: flex-start;
-        }
-         .console-entry::before {
-            content: '>';
-            color: #999;
-            font-family: monospace;
-            line-height: 1.5;
-        }
-        .console-entry:last-child { border: none; }
-        /* Log colors for light theme */
-        .console-log { color: #333; }
-        .console-error { color: #c00; }
-        .console-warn { color: #b45309; }
-        .console-info { color: #0550ae; }
-        .console-debug { color: #551a8b; }
-    </style>
+  /* animated deep-space gradient */
+  .bg {
+    position: fixed; inset: -20%;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,0,128,.35), transparent 40%),
+      radial-gradient(circle at 80% 20%, rgba(0,200,255,.35), transparent 40%),
+      radial-gradient(circle at 60% 80%, rgba(150,0,255,.35), transparent 45%),
+      radial-gradient(circle at 30% 70%, rgba(255,200,0,.25), transparent 40%),
+      #05010f;
+    animation: hue 14s linear infinite, drift 20s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+  @keyframes hue { to { filter: hue-rotate(360deg); } }
+  @keyframes drift { from { transform: translate(-2%, -1%) scale(1); } to { transform: translate(2%, 2%) scale(1.06); } }
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D65KYL9C6V"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-D65KYL9C6V');
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  /* floating shapes with depth */
+  .shape {
+    position: fixed; z-index: 2; opacity: .85;
+    mix-blend-mode: screen;
+    animation: float 9s ease-in-out infinite alternate, spin 16s linear infinite;
+    will-change: transform;
+  }
+  .shape.b1 { left: 8%;  top: 12%; width: 120px; height: 120px; border-radius: 24px;
+    background: linear-gradient(135deg, #ff3cac, #784bff); animation-delay: -2s; }
+  .shape.b2 { right: 10%; top: 18%; width: 90px; height: 90px; border-radius: 50%;
+    background: linear-gradient(135deg, #00ffd5, #0084ff); animation-delay: -5s; }
+  .shape.b3 { left: 15%; bottom: 15%; width: 70px; height: 70px;
+    background: linear-gradient(135deg, #ffe600, #ff6a00);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%); animation-delay: -1s; }
+  .shape.b4 { right: 14%; bottom: 20%; width: 100px; height: 100px;
+    background: linear-gradient(135deg, #b300ff, #ff0080);
+    clip-path: polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%); animation-delay: -7s; }
+  .shape.b5 { left: 45%; top: 6%; width: 60px; height: 60px; border-radius: 12px;
+    background: linear-gradient(135deg, #00ff88, #00ccff); animation-delay: -4s; }
+  .shape.b6 { right: 38%; bottom: 8%; width: 55px; height: 55px; border-radius: 50%;
+    background: linear-gradient(135deg, #ff0055, #ffb700); animation-delay: -3s; }
+  @keyframes float { from { transform: translateY(-30px) rotate(0deg) translateZ(60px); } to { transform: translateY(30px) rotate(20deg) translateZ(-40px); } }
+  @keyframes spin  { to { transform: rotate(360deg); } }
+
+  .center { position: relative; z-index: 3; text-align: center; transform-style: preserve-3d; }
+
+  .title {
+    font-size: clamp(3rem, 11vw, 9rem);
+    font-weight: 900; letter-spacing: .04em; line-height: 1;
+    background: linear-gradient(90deg, #ff3cac, #ffe600, #00ffd5, #784bff, #ff3cac);
+    background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: slide 4s linear infinite, pop 1s cubic-bezier(.2,1.6,.4,1) both;
+    filter: drop-shadow(0 0 25px rgba(255,60,172,.55));
+  }
+  @keyframes slide { to { background-position: 300% 0; } }
+  @keyframes pop { 0% { transform: scale(0) rotate(-8deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+
+  .sub {
+    margin-top: 1.2rem; font-size: clamp(1.1rem, 3vw, 2rem);
+    color: #eaf6ff; letter-spacing: .35em; text-transform: uppercase;
+    opacity: 0; animation: rise .8s ease-out .5s forwards;
+    text-shadow: 0 0 18px rgba(0,200,255,.8);
+  }
+  @keyframes rise { from { transform: translateY(25px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .pulse-dot { display: inline-block; width: .6em; height: .6em; border-radius: 50%;
+    background: #00ffd5; margin-right: .5em; vertical-align: middle;
+    box-shadow: 0 0 12px #00ffd5; animation: blink 1.2s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .25; transform: scale(.7); } }
+
+  .hint { position: fixed; bottom: 24px; width: 100%; text-align: center; z-index: 3;
+    color: rgba(255,255,255,.45); font-size: .85rem; letter-spacing: .2em; }
+</style>
 </head>
-
 <body>
-    <!-- Toast Notification Container -->
-    <div class="toast-container" id="toast-container"></div>
+  <div class="bg"></div>
+  <div class="shape b1"></div><div class="shape b2"></div><div class="shape b3"></div>
+  <div class="shape b4"></div><div class="shape b5"></div><div class="shape b6"></div>
+  <canvas id="fx"></canvas>
+  <div class="center">
+    <h1 class="title">CREATION BUDDY</h1>
+    <p class="sub"><span class="pulse-dot"></span>Will be back later</p>
+  </div>
+  <div class="hint">CLICK ANYWHERE FOR FIREWORKS &nbsp;·&nbsp; <a href="app.html" style="color:inherit">Open the app &rarr;</a></div>
+<script>
+(function () {
+  const canvas = document.getElementById('fx');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+  resize(); addEventListener('resize', resize);
 
-    <div class="app-container">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h1 class="sidebar-title">Creation <strong>Buddy</strong></h1>
-            </div>
-            
-            <div class="sidebar-content">
-                <div class="controls-section">
-                    <button id="new-chat-btn" class="new-chat-button">
-                        <span class="plus-icon">+</span> New Chat
-                    </button>
-                </div>
-                
-                <div class="chat-list-container">
-                    <ul class="chat-list" id="chat-list"></ul>
-                </div>
-            </div>
-            
-            <div class="sidebar-footer">
-                <div class="controls">
-                     <div class="control-group">
-                        <label class="control-label">Manage Chats</label>
-                        <div class="footer-button-group">
-                            <button id="import-all-btn" class="secondary" title="Import Chats"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg></button>
-                            <button id="export-all-btn" class="secondary" title="Export All Chats"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg></button>
-                            <button id="delete-all-btn" class="danger" title="Delete All Chats"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg></button>
-                        </div>
-                        <input type="file" id="import-all-input" style="display: none;" accept=".json">
-                    </div>
-                     <div class="control-group">
-                        <label class="control-label">Mistral API Key <a href="https://docs.mistral.ai/getting-started/quickstart/" target="_blank"><small>How to get one?</small></a></label>
-                        <input type="password" id="apikey" placeholder="Enter Mistral API Key">
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="main" id="main-chat">
-            <div class="chat-header">
-                <button id="sidebar-toggle-btn" title="Toggle Sidebar">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
-                    </svg>
-                </button>
-                <h2 id="current-chat-name">New Chat</h2>
-            </div>
-            <div class="chat-area" id="chat-area"></div>
-            <div class="input-area">
-                <textarea id="chat-input" rows="1" placeholder="Ask me to build a website for you..."></textarea>
-                <div class="input-toolbar">
-                    <div class="model-info-container">
-                        <select id="model">
-                            <option value="magistral-medium-2506">Magistral Medium</option>
-                            <option value="mistral-medium-latest">Mistral Medium</option>
-                            <option value="mistral-small-latest">Mistral Small</option>
-                            <option value="codestral-latest">Codestral</option>
-                            <option value="devstral-small-latest">Devstral Small</option>
-                            <option value="ministral-3b-2410">Ministral 3B</option>
-                            <option value="ministral-8b-2410">Ministral 8B</option>
-                            <option value="mistral-large-latest">Mistral Large</option>
-                        </select>
-                    </div>
-                    <button id="send-btn" class="send-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                            <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="resizer" id="resizer"></div>
-        
-        <div class="iframe-container" id="iframe-container">
-            <div class="ide-container" id="ide-container">
-                <div class="ide-empty-state" id="ide-empty-state">
-                    <h3>No Code Selected</h3>
-                    <p>Click on any code block in the chat to view and edit it here</p>
-                </div>
-                
-                <div class="ide-header" id="ide-header" style="display:none;">
-                    <div class="ide-header-left">
-                        <div class="view-toggle" id="view-toggle" style="display:none;">
-                            <button class="view-toggle-btn active" id="code-view-btn" onclick="switchView('code')" title="View Code (⌘1)">HTML</button>
-                            <button class="view-toggle-btn" id="preview-view-btn" onclick="switchView('preview')" title="View Preview (⌘2)">Preview</button>
-                        </div>
-                        <span class="ide-modified-indicator" id="ide-modified-indicator"></span>
-                    </div>
-                    <div class="ide-actions">
-                        <button class="ide-action-btn secondary" id="discard-btn" onclick="discardCodeEdit()">Discard</button>
-                        <button class="ide-action-btn" id="save-btn" onclick="saveCodeEdit()">Save</button>
-                        <button onclick="copyCurrentCode()" class="ide-action-btn">Copy</button>
-                        <button onclick="downloadCurrentCode()" class="ide-action-btn">Download</button>
-                    </div>
-                </div>
-                
-                <div class="ide-content" id="ide-content" style="display:none;">
-                    <div class="ide-editor-section active" id="ide-editor-section">
-                        <div class="line-numbers" id="line-numbers"></div>
-                        <textarea class="code-editor" id="code-editor"></textarea>
-                    </div>
-                    <div class="ide-preview-section" id="ide-preview-section">
-                        <div class="preview-wrapper">
-                            <iframe class="preview-iframe" id="preview-iframe"></iframe>
-                        </div>
-                        <div class="ide-console-resizer" id="ide-console-resizer"></div>
-                        <div class="ide-console-container" id="ide-console-container">
-                            <div class="ide-console-header">
-                                <div class="ide-console-title">
-                                    <span>Live Logs</span>
-                                    <span class="info-icon" title="Displays messages, errors, and logs from the running code in the preview window.">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="14" height="14">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                                        </svg>
-                                    </span>
-                                </div>
-                                <button id="clear-console-btn" title="Clear console">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
-                                </button>
-                            </div>
-                            <div class="ide-console-output" id="ide-console-output"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  const COLORS = ['#ff3cac','#ffe600','#00ffd5','#784bff','#ff6a00','#00ff88','#b300ff','#ff0055'];
+  const parts = [];
+  const SHAPES = ['circle','square','triangle','star'];
 
-    <script src="main.js"></script>
+  function star(x, y, r, rot) {
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const a = rot + i * Math.PI / 5;
+      const rr = i % 2 ? r * .45 : r;
+      ctx[i ? 'lineTo' : 'moveTo'](x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+    }
+    ctx.closePath();
+  }
+
+  function boom(x, y, n) {
+    n = n || 120;
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const sp = 2 + Math.random() * 9;
+      parts.push({
+        x, y,
+        vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+        life: 1, decay: .006 + Math.random() * .012,
+        size: 3 + Math.random() * 7,
+        color: COLORS[Math.random() * COLORS.length | 0],
+        shape: SHAPES[Math.random() * SHAPES.length | 0],
+        rot: Math.random() * Math.PI, vr: (Math.random() - .5) * .3,
+        z: .3 + Math.random() * .7
+      });
+    }
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i];
+      p.x += p.vx * p.z; p.y += p.vy * p.z;
+      p.vy += .12 * p.z; p.vx *= .985; p.vy *= .985;
+      p.rot += p.vr; p.life -= p.decay;
+      if (p.life <= 0) { parts.splice(i, 1); continue; }
+      ctx.globalAlpha = Math.max(p.life, 0);
+      ctx.fillStyle = p.color;
+      ctx.shadowColor = p.color; ctx.shadowBlur = 15;
+      const s = p.size * p.z;
+      if (p.shape === 'circle') {
+        ctx.beginPath(); ctx.arc(p.x, p.y, s, 0, Math.PI * 2); ctx.fill();
+      } else if (p.shape === 'square') {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+        ctx.fillRect(-s, -s, s * 2, s * 2); ctx.restore();
+      } else if (p.shape === 'triangle') {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+        ctx.beginPath(); ctx.moveTo(0, -s); ctx.lineTo(s, s); ctx.lineTo(-s, s);
+        ctx.closePath(); ctx.fill(); ctx.restore();
+      } else {
+        star(p.x, p.y, s * 1.4, p.rot); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  function grand Finale() {}
+  // opening explosion
+  setTimeout(() => boom(W / 2, H / 2, 200), 350);
+  setTimeout(() => boom(W * .25, H * .35, 90), 700);
+  setTimeout(() => boom(W * .75, H * .35, 90), 950);
+
+  addEventListener('pointerdown', e => boom(e.clientX, e.clientY, 140));
+  // ambient periodic bursts
+  setInterval(() => boom(Math.random() * W, Math.random() * H * .7, 60), 2600);
+})();
+</script>
 </body>
-
 </html>
